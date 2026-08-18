@@ -6,56 +6,61 @@
     <title>The 5-Day Challenge</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-white min-h-screen">
+<body class="bg-slate-900 text-white min-h-screen flex flex-col">
 
     <!-- شاشة تسجيل الدخول -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl w-full max-w-md shadow-2xl space-y-4">
-            <h2 class="text-2xl font-black text-center mb-2">دخول التحدي</h2>
-            <input type="text" id="auth-name" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white outline-none focus:border-indigo-500" placeholder="اسمك الكامل">
-            <input type="email" id="auth-email" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white outline-none focus:border-indigo-500" placeholder="الإيميل">
-            <button id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 p-3.5 rounded-xl font-bold transition-all">دخول 🚀</button>
+            <h2 class="text-2xl font-black text-center text-indigo-400">دخول التحدي</h2>
+            <input type="text" id="auth-name" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white" placeholder="اسمك الكامل">
+            <input type="email" id="auth-email" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white" placeholder="البريد الإلكتروني">
+            <button id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 p-3.5 rounded-xl font-bold">دخول 🚀</button>
         </div>
     </div>
 
-    <header class="p-4 flex justify-between items-center max-w-4xl mx-auto border-b border-slate-800">
+    <!-- الهيدر -->
+    <header class="p-4 bg-slate-800/50 border-b border-slate-800 flex justify-between items-center max-w-4xl mx-auto w-full">
         <h1 class="font-bold text-lg">5-Day Challenge</h1>
         <button id="admin-btn" class="bg-amber-600 px-4 py-2 rounded-lg font-bold text-xs">الأدمن</button>
     </header>
 
-    <main class="max-w-4xl mx-auto p-4 space-y-6">
-        <div id="challenge-area" class="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-4xl mx-auto p-4 space-y-6 w-full flex-1">
+        <!-- قسم السؤال -->
+        <div id="challenge-area" class="bg-slate-800 border border-slate-700 p-6 rounded-2xl shadow-xl">
             <p class="text-slate-400 text-center">جاري تحميل السؤال...</p>
         </div>
-        <div id="leaderboard" class="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
-            <h3 class="font-bold mb-3">لوحة الصدارة</h3>
-            <div id="lb-list">لا توجد بيانات بعد</div>
+
+        <!-- لوحة الصدارة -->
+        <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl shadow-xl">
+            <h3 class="font-bold text-lg mb-4 text-indigo-300">لوحة الصدارة (Top Participants)</h3>
+            <div id="lb-list" class="space-y-2">جاري التحميل...</div>
         </div>
     </main>
 
-    <!-- Admin Modal -->
+    <!-- نافذة الأدمن -->
     <div id="admin-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-700 p-6 rounded-2xl w-full max-w-lg space-y-3">
-            <h2 class="font-bold text-lg">إعدادات الأدمن</h2>
-            <input id="adm-q" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="السؤال">
-            <input id="adm-opt1" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="خيار 1">
-            <input id="adm-opt2" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="خيار 2">
-            <input id="adm-opt3" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="خيار 3">
-            <input id="adm-opt4" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="خيار 4">
+        <div class="bg-slate-900 border border-slate-700 p-6 rounded-2xl w-full max-w-lg space-y-3 max-h-[90vh] overflow-y-auto">
+            <h2 class="font-bold text-lg text-amber-400">لوحة تحكم الأدمن (MCQ)</h2>
+            <input id="adm-q" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="اكتب السؤال هنا...">
+            <input id="adm-opt1" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="الاختيار الأول">
+            <input id="adm-opt2" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="الاختيار الثاني">
+            <input id="adm-opt3" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="الاختيار الثالث">
+            <input id="adm-opt4" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="الاختيار الرابع">
             <select id="adm-corr" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white">
-                <option value="0">خيار 1 صحيح</option>
-                <option value="1">خيار 2 صحيح</option>
-                <option value="2">خيار 3 صحيح</option>
-                <option value="3">خيار 4 صحيح</option>
+                <option value="0">الإجابة الصحيحة: الاختيار الأول</option>
+                <option value="1">الإجابة الصحيحة: الاختيار الثاني</option>
+                <option value="2">الإجابة الصحيحة: الاختيار الثالث</option>
+                <option value="3">الإجابة الصحيحة: الاختيار الرابع</option>
             </select>
             <div class="flex gap-2 pt-2">
                 <button id="close-admin" class="flex-1 bg-slate-800 p-2.5 rounded-lg">إلغاء</button>
-                <button id="save-admin" class="flex-1 bg-amber-600 p-2.5 rounded-lg font-bold">حفظ</button>
+                <button id="save-admin" class="flex-1 bg-amber-600 p-2.5 rounded-lg font-bold">حفظ ونشر</button>
             </div>
         </div>
     </div>
 
-    <!-- كود الـ JavaScript والـ Firebase المعالج للأزرار -->
+    <!-- جافاسكريبت والاتصال بقاعدة البيانات -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
@@ -64,20 +69,20 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // التحقق من تسجيل الدخول السابق
+        // التحقق من تسجيل الدخول المخزن محلياً
         const savedUser = JSON.parse(localStorage.getItem('user'));
         if (savedUser) {
             document.getElementById('auth-screen').style.display = 'none';
             loadLeaderboard();
         }
 
-        // زر التسجيل
+        // تسجيل الدخول
         document.getElementById('login-btn').addEventListener('click', async () => {
             const name = document.getElementById('auth-name').value.trim();
             const email = document.getElementById('auth-email').value.trim();
             
             if(!name || !email) {
-                alert("من فضلك اكتب اسمك والإيميل بشكل صحيح");
+                alert("برجاء إدخال الاسم والبريد الإلكتروني");
                 return;
             }
 
@@ -88,22 +93,18 @@
                 document.getElementById('auth-screen').style.display = 'none';
                 location.reload();
             } catch (error) {
-                console.error(error);
                 alert("حدث خطأ في الاتصال، حاول مرة أخرى");
                 document.getElementById('login-btn').innerText = "دخول 🚀";
             }
         });
 
-        // إدارة الأدمن
-        document.getElementById('admin-btn').addEventListener('click', () => {
-            document.getElementById('admin-modal').style.display = 'flex';
-        });
-        document.getElementById('close-admin').addEventListener('click', () => {
-            document.getElementById('admin-modal').style.display = 'none';
-        });
+        // فتح وغلق لوحة الأدمن
+        document.getElementById('admin-btn').addEventListener('click', () => document.getElementById('admin-modal').style.display = 'flex');
+        document.getElementById('close-admin').addEventListener('click', () => document.getElementById('admin-modal').style.display = 'none');
 
-        document.getElementById('save-admin').addEventListener('click', () => {
-            const data = {
+        // حفظ تفاصيل السؤال في الـ Firebase أو الـ LocalStorage لتسهيل العرض
+        document.getElementById('save-admin').addEventListener('click', async () => {
+            const qData = {
                 q: document.getElementById('adm-q').value,
                 opts: [
                     document.getElementById('adm-opt1').value,
@@ -111,63 +112,88 @@
                     document.getElementById('adm-opt3').value,
                     document.getElementById('adm-opt4').value
                 ],
-                corr: document.getElementById('adm-corr').value
+                corr: parseInt(document.getElementById('adm-corr').value)
             };
-            localStorage.setItem('ch_data', JSON.stringify(data));
-            alert("تم حفظ السؤال بنجاح!");
+            
+            // نحفظ السؤال في قاعدة البيانات عشان يظهر للكل
+            await setDoc(doc(db, "settings", "current_question"), qData);
+            localStorage.setItem('ch_data', JSON.stringify(qData));
+            alert("تم حفظ ونشر السؤال بنجاح للجميع!");
             document.getElementById('admin-modal').style.display = 'none';
             location.reload();
         });
 
-        // عرض السؤال
-        const savedData = JSON.parse(localStorage.getItem('ch_data'));
-        const area = document.getElementById('challenge-area');
-        if(savedData) {
-            let html = `<h3 class="font-bold text-lg mb-3">${savedData.q}</h3><div class="space-y-2">`;
-            savedData.opts.forEach((opt, idx) => {
-                html += `<button class="opt-btn w-full text-right bg-slate-700 hover:bg-indigo-600 p-3 rounded-xl transition-all" data-idx="${idx}">${opt}</button>`;
-            });
-            html += `</div>`;
-            area.innerHTML = html;
-
-            document.querySelectorAll('.opt-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    const idx = e.target.getAttribute('data-idx');
-                    if(idx == savedData.corr) {
-                        alert("إجابة صحيحة! 🎉");
-                        // زيادة النقاط
-                        const user = JSON.parse(localStorage.getItem('user'));
-                        if(user) {
-                            const uRef = doc(db, "users", user.email);
-                            const snap = await getDoc(uRef);
-                            const currentScore = snap.exists() ? (snap.data().score || 0) : 0;
-                            await setDoc(uRef, { score: currentScore + 100 }, { merge: true });
-                            location.reload();
-                        }
-                    } else {
-                        alert("إجابة خاطئة، حاول مجدداً!");
-                    }
-                });
-            });
-        } else {
-            area.innerHTML = `<p class="text-amber-400">لم يقم الأدمن بإضافة سؤال بعد. افتح لوحة الأدمن وأضف سؤالاً.</p>`;
-        }
-
-        // تحميل الصدارة
-        async function loadLeaderboard() {
+        async function initApp() {
+            const area = document.getElementById('challenge-area');
+            let savedData = JSON.parse(localStorage.getItem('ch_data'));
+            
             try {
-                const q = collection(db, "users");
-                const querySnapshot = await getDocs(q);
-                let listHtml = "";
-                querySnapshot.forEach((doc) => {
-                    const u = doc.data();
-                    listHtml += `<div class="flex justify-between border-b border-slate-700 py-2"><span>${u.name || 'مستخدم'}</span> <span class="font-bold text-indigo-400">${u.score || 0} نقطة</span></div>`;
+                const snap = await getDoc(doc(db, "settings", "current_question"));
+                if(snap.exists()) {
+                    savedData = snap.data();
+                    localStorage.setItem('ch_data', JSON.stringify(savedData));
+                }
+            } catch(e) {}
+
+            if(savedData && savedData.opts) {
+                let html = `<h3 class="font-bold text-xl mb-4 text-indigo-200">${savedData.q}</h3><div class="space-y-3">`;
+                savedData.opts.forEach((opt, idx) => {
+                    html += `<button class="opt-btn w-full text-right bg-slate-700 hover:bg-indigo-600 p-3.5 rounded-xl transition-all font-medium border border-slate-600" data-idx="${idx}">${opt}</button>`;
                 });
-                document.getElementById('lb-list').innerHTML = listHtml || "لا توجد مسجلات بعد";
-            } catch(e) {
-                console.log(e);
+                html += `</div>`;
+                area.innerHTML = html;
+
+                document.querySelectorAll('.opt-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const idx = parseInt(e.target.getAttribute('data-idx'));
+                        if(idx === savedData.corr) {
+                            alert("إجابة صحيحة! 🎉 +100 نقطة");
+                            const user = JSON.parse(localStorage.getItem('user'));
+                            if(user) {
+                                const uRef = doc(db, "users", user.email);
+                                const uSnap = await getDoc(uRef);
+                                const currentScore = uSnap.exists() ? (uSnap.data().score || 0) : 0;
+                                await setDoc(uRef, { score: currentScore + 100 }, { merge: true });
+                                location.reload();
+                            }
+                        } else {
+                            alert("إجابة خاطئة، حاول مجدداً!");
+                        }
+                    });
+                });
+            } else {
+                area.innerHTML = `<p class="text-amber-400 text-center font-medium">لم يتم إضافة سؤال بعد. اضغط على زر "الأدمن" وأضف السؤال والاختيارات.</p>`;
             }
         }
+
+        initApp();
+
+        // جلب وتحديث لوحة الصدارة للكل
+        async function loadLeaderboard() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "users"));
+                let listHtml = "";
+                let users = [];
+                querySnapshot.forEach((doc) => {
+                    users.push(doc.data());
+                });
+                
+                // ترتيب المستخدمين تنازلياً حسب النقاط
+                users.sort((a, b) => (b.score || 0) - (a.score || 0));
+
+                users.forEach((u, index) => {
+                    listHtml += `
+                        <div class="flex justify-between items-center bg-slate-700/40 border border-slate-700 p-3 rounded-xl">
+                            <span class="font-bold text-slate-200">#${index + 1} - ${u.name || 'مستخدم'}</span> 
+                            <span class="font-black text-indigo-400 bg-indigo-950/60 px-3 py-1 rounded-lg">${u.score || 0} نقطة</span>
+                        </div>`;
+                });
+                document.getElementById('lb-list').innerHTML = listHtml || "لا توجد مشاركات حتى الآن";
+            } catch(e) {
+                document.getElementById('lb-list').innerHTML = "تعذر تحميل لوحة الصدارة";
+            }
+        }
+        
         if(savedUser) loadLeaderboard();
     </script>
 </body>
