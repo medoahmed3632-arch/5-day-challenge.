@@ -2,104 +2,173 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The 5-Day Challenge</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 text-white min-h-screen">
+
+    <!-- شاشة تسجيل الدخول -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 p-8 rounded-3xl w-full max-w-md shadow-2xl">
-            <h2 class="text-2xl font-black mb-6 text-center">دخول التحدي</h2>
-            <input type="text" id="auth-name" class="w-full bg-slate-800 p-3 rounded-xl mb-4" placeholder="اسمك الكامل">
-            <input type="email" id="auth-email" class="w-full bg-slate-800 p-3 rounded-xl mb-6" placeholder="الإيميل">
-            <button onclick="handleLogin()" class="w-full bg-indigo-600 p-3 rounded-xl font-bold">دخول 🚀</button>
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl w-full max-w-md shadow-2xl space-y-4">
+            <h2 class="text-2xl font-black text-center mb-2">دخول التحدي</h2>
+            <input type="text" id="auth-name" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white outline-none focus:border-indigo-500" placeholder="اسمك الكامل">
+            <input type="email" id="auth-email" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white outline-none focus:border-indigo-500" placeholder="الإيميل">
+            <button id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 p-3.5 rounded-xl font-bold transition-all">دخول 🚀</button>
         </div>
     </div>
 
-    <header class="p-4 flex justify-between items-center max-w-4xl mx-auto">
-        <h1 class="font-bold">5-Day Challenge</h1>
-        <button onclick="openAdmin()" class="bg-amber-600 px-4 py-2 rounded-lg font-bold text-xs">الأدمن</button>
+    <header class="p-4 flex justify-between items-center max-w-4xl mx-auto border-b border-slate-800">
+        <h1 class="font-bold text-lg">5-Day Challenge</h1>
+        <button id="admin-btn" class="bg-amber-600 px-4 py-2 rounded-lg font-bold text-xs">الأدمن</button>
     </header>
 
-    <main class="max-w-4xl mx-auto p-4" id="main-content">
-        <div id="challenge-area" class="bg-slate-800 p-6 rounded-2xl mb-6"></div>
-        <div id="leaderboard" class="bg-slate-800 p-6 rounded-2xl"></div>
+    <main class="max-w-4xl mx-auto p-4 space-y-6">
+        <div id="challenge-area" class="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
+            <p class="text-slate-400 text-center">جاري تحميل السؤال...</p>
+        </div>
+        <div id="leaderboard" class="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
+            <h3 class="font-bold mb-3">لوحة الصدارة</h3>
+            <div id="lb-list">لا توجد بيانات بعد</div>
+        </div>
     </main>
 
     <!-- Admin Modal -->
-    <div id="admin-modal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 p-6 rounded-2xl w-full max-w-lg">
-            <h2 class="font-bold mb-4">إعدادات الأدمن</h2>
-            <input id="adm-q" class="w-full bg-slate-800 p-2 mb-2" placeholder="السؤال">
-            <input id="adm-opt1" class="w-full bg-slate-800 p-2 mb-2" placeholder="خيار 1">
-            <input id="adm-opt2" class="w-full bg-slate-800 p-2 mb-2" placeholder="خيار 2">
-            <input id="adm-opt3" class="w-full bg-slate-800 p-2 mb-2" placeholder="خيار 3">
-            <input id="adm-opt4" class="w-full bg-slate-800 p-2 mb-2" placeholder="خيار 4">
-            <select id="adm-corr" class="w-full bg-slate-800 p-2 mb-4">
-                <option value="0">خيار 1 صحيح</option><option value="1">خيار 2 صحيح</option>
-                <option value="2">خيار 3 صحيح</option><option value="3">خيار 4 صحيح</option>
+    <div id="admin-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-700 p-6 rounded-2xl w-full max-w-lg space-y-3">
+            <h2 class="font-bold text-lg">إعدادات الأدمن</h2>
+            <input id="adm-q" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="السؤال">
+            <input id="adm-opt1" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="خيار 1">
+            <input id="adm-opt2" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="خيار 2">
+            <input id="adm-opt3" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="خيار 3">
+            <input id="adm-opt4" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white" placeholder="خيار 4">
+            <select id="adm-corr" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-white">
+                <option value="0">خيار 1 صحيح</option>
+                <option value="1">خيار 2 صحيح</option>
+                <option value="2">خيار 3 صحيح</option>
+                <option value="3">خيار 4 صحيح</option>
             </select>
-            <button onclick="saveAdmin()" class="w-full bg-amber-600 p-2 rounded-lg">حفظ</button>
+            <div class="flex gap-2 pt-2">
+                <button id="close-admin" class="flex-1 bg-slate-800 p-2.5 rounded-lg">إلغاء</button>
+                <button id="save-admin" class="flex-1 bg-amber-600 p-2.5 rounded-lg font-bold">حفظ</button>
+            </div>
         </div>
     </div>
 
+    <!-- كود الـ JavaScript والـ Firebase المعالج للأزرار -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyBMxfI1fHY0nXbkrX3Vl9a1Zq_h-85mS8Y", authDomain: "challenge5days.firebaseapp.com", projectId: "challenge5days", storageBucket: "challenge5days.appspot.com", messagingSenderId: "404505595178", appId: "1:404505595178:web:8d514856f4d3663b655f01" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        window.handleLogin = async () => {
-            const name = document.getElementById('auth-name').value;
-            const email = document.getElementById('auth-email').value;
-            if(!name || !email) return alert("اكتب الاسم والإيميل");
+        // التحقق من تسجيل الدخول السابق
+        const savedUser = JSON.parse(localStorage.getItem('user'));
+        if (savedUser) {
+            document.getElementById('auth-screen').style.display = 'none';
+            loadLeaderboard();
+        }
+
+        // زر التسجيل
+        document.getElementById('login-btn').addEventListener('click', async () => {
+            const name = document.getElementById('auth-name').value.trim();
+            const email = document.getElementById('auth-email').value.trim();
             
-            await setDoc(doc(db, "users", email), { name, email, score: 0 }, { merge: true });
-            localStorage.setItem('user', JSON.stringify({name, email}));
-            location.reload();
-        };
-
-        // دالة عرض التحدي
-        window.renderChallenge = (data) => {
-            const area = document.getElementById('challenge-area');
-            area.innerHTML = `<h3>${data.q}</h3>` + data.opts.map((o, i) => 
-                `<button onclick="checkAnswer(${i})" class="block w-full bg-indigo-600 p-3 rounded-lg mt-2">${o}</button>`
-            ).join('');
-        };
-
-        window.checkAnswer = async (idx) => {
-            const user = JSON.parse(localStorage.getItem('user'));
-            const data = JSON.parse(localStorage.getItem('ch_data'));
-            if(idx == data.corr) {
-                const userRef = doc(db, "users", user.email);
-                const snap = await getDoc(userRef);
-                const newScore = (snap.data().score || 0) + 100;
-                await setDoc(userRef, { score: newScore }, { merge: true });
-                alert("إجابة صحيحة! +100 نقطة");
-                location.reload();
-            } else {
-                alert("خطأ! حاول تاني");
+            if(!name || !email) {
+                alert("من فضلك اكتب اسمك والإيميل بشكل صحيح");
+                return;
             }
-        };
 
-        window.openAdmin = () => document.getElementById('admin-modal').classList.remove('hidden');
-        window.saveAdmin = () => {
+            try {
+                document.getElementById('login-btn').innerText = "جاري الدخول...";
+                await setDoc(doc(db, "users", email), { name, email, score: 0 }, { merge: true });
+                localStorage.setItem('user', JSON.stringify({name, email}));
+                document.getElementById('auth-screen').style.display = 'none';
+                location.reload();
+            } catch (error) {
+                console.error(error);
+                alert("حدث خطأ في الاتصال، حاول مرة أخرى");
+                document.getElementById('login-btn').innerText = "دخول 🚀";
+            }
+        });
+
+        // إدارة الأدمن
+        document.getElementById('admin-btn').addEventListener('click', () => {
+            document.getElementById('admin-modal').style.display = 'flex';
+        });
+        document.getElementById('close-admin').addEventListener('click', () => {
+            document.getElementById('admin-modal').style.display = 'none';
+        });
+
+        document.getElementById('save-admin').addEventListener('click', () => {
             const data = {
                 q: document.getElementById('adm-q').value,
-                opts: [document.getElementById('adm-opt1').value, document.getElementById('adm-opt2').value, document.getElementById('adm-opt3').value, document.getElementById('adm-opt4').value],
+                opts: [
+                    document.getElementById('adm-opt1').value,
+                    document.getElementById('adm-opt2').value,
+                    document.getElementById('adm-opt3').value,
+                    document.getElementById('adm-opt4').value
+                ],
                 corr: document.getElementById('adm-corr').value
             };
             localStorage.setItem('ch_data', JSON.stringify(data));
-            alert("تم حفظ التحدي، اعمل ريفرش!");
+            alert("تم حفظ السؤال بنجاح!");
+            document.getElementById('admin-modal').style.display = 'none';
             location.reload();
-        };
+        });
 
-        // تحميل أولي
-        const savedUser = localStorage.getItem('user');
-        if(savedUser) document.getElementById('auth-screen').classList.add('hidden');
+        // عرض السؤال
         const savedData = JSON.parse(localStorage.getItem('ch_data'));
-        if(savedData) renderChallenge(savedData);
+        const area = document.getElementById('challenge-area');
+        if(savedData) {
+            let html = `<h3 class="font-bold text-lg mb-3">${savedData.q}</h3><div class="space-y-2">`;
+            savedData.opts.forEach((opt, idx) => {
+                html += `<button class="opt-btn w-full text-right bg-slate-700 hover:bg-indigo-600 p-3 rounded-xl transition-all" data-idx="${idx}">${opt}</button>`;
+            });
+            html += `</div>`;
+            area.innerHTML = html;
+
+            document.querySelectorAll('.opt-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const idx = e.target.getAttribute('data-idx');
+                    if(idx == savedData.corr) {
+                        alert("إجابة صحيحة! 🎉");
+                        // زيادة النقاط
+                        const user = JSON.parse(localStorage.getItem('user'));
+                        if(user) {
+                            const uRef = doc(db, "users", user.email);
+                            const snap = await getDoc(uRef);
+                            const currentScore = snap.exists() ? (snap.data().score || 0) : 0;
+                            await setDoc(uRef, { score: currentScore + 100 }, { merge: true });
+                            location.reload();
+                        }
+                    } else {
+                        alert("إجابة خاطئة، حاول مجدداً!");
+                    }
+                });
+            });
+        } else {
+            area.innerHTML = `<p class="text-amber-400">لم يقم الأدمن بإضافة سؤال بعد. افتح لوحة الأدمن وأضف سؤالاً.</p>`;
+        }
+
+        // تحميل الصدارة
+        async function loadLeaderboard() {
+            try {
+                const q = collection(db, "users");
+                const querySnapshot = await getDocs(q);
+                let listHtml = "";
+                querySnapshot.forEach((doc) => {
+                    const u = doc.data();
+                    listHtml += `<div class="flex justify-between border-b border-slate-700 py-2"><span>${u.name || 'مستخدم'}</span> <span class="font-bold text-indigo-400">${u.score || 0} نقطة</span></div>`;
+                });
+                document.getElementById('lb-list').innerHTML = listHtml || "لا توجد مسجلات بعد";
+            } catch(e) {
+                console.log(e);
+            }
+        }
+        if(savedUser) loadLeaderboard();
     </script>
 </body>
 </html>
