@@ -67,10 +67,11 @@
     <main class="flex-1 max-w-4xl w-full mx-auto p-4 space-y-6">
         <section class="bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 p-6 rounded-2xl border border-indigo-500/30 shadow-xl">
             <h2 class="text-xl font-black mb-1 text-white">أيام التحدي</h2>
-            <p class="text-slate-400 text-xs mb-4">اختر اليوم لعرض التحدي الخاص به وإرسال إجابتك:</p>
+            <p class="text-slate-400 text-xs mb-4">اختر اليوم لعرض التحدي الخاص به والإجابة:</p>
             <div class="grid grid-cols-5 gap-2" id="days-tabs"></div>
         </section>
 
+        <!-- كارد عرض السؤال والاختيارات -->
         <section class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl" id="challenge-card-container"></section>
 
         <!-- لوحة الصدارة (Top Participants) -->
@@ -87,11 +88,11 @@
         </section>
     </main>
 
-    <!-- لوحة التحكم (الأدمن) -->
+    <!-- لوحة التحكم (الأدمن - نظام الاختيارات MCQ) -->
     <div id="admin-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center">
-                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-pen-nib text-amber-400"></i> لوحة التحكم</h3>
+                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-pen-nib text-amber-400"></i> لوحة التحكم (اختيار من متعدد)</h3>
                 <button onclick="closeModal('admin-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div class="space-y-3">
@@ -107,15 +108,29 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">عنوان التحدي:</label>
-                    <input type="text" id="admin-title" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
+                    <input type="text" id="admin-title" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white" placeholder="مثال: تحدي الكلينيكال">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">نص السؤال أو الحالة:</label>
-                    <textarea id="admin-desc" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white"></textarea>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">نص السؤال:</label>
+                    <textarea id="admin-desc" rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white" placeholder="اكتب نص السؤال هنا..."></textarea>
                 </div>
+                
+                <div class="space-y-2 pt-2 border-t border-slate-800">
+                    <label class="block text-xs font-bold text-amber-400">خيارات الإجابة (MCQ):</label>
+                    <input type="text" id="admin-opt-0" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-sm text-white" placeholder="الاختيار الأول">
+                    <input type="text" id="admin-opt-1" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-sm text-white" placeholder="الاختيار الثاني">
+                    <input type="text" id="admin-opt-2" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-sm text-white" placeholder="الاختيار الثالث">
+                    <input type="text" id="admin-opt-3" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-sm text-white" placeholder="الاختيار الرابع">
+                </div>
+
                 <div>
-                    <label class="block text-xs font-semibold text-amber-400 mb-1">⭐ الإجابة النموذجية الصحيحة (للتصحيح التلقائي):</label>
-                    <input type="text" id="admin-model-answer" class="w-full bg-slate-800 border border-amber-500 rounded-xl p-2.5 text-sm text-white" placeholder="مثال: باراسيتامول">
+                    <label class="block text-xs font-semibold text-amber-400 mb-1">⭐ حدد الإجابة الصحيحة:</label>
+                    <select id="admin-correct-idx" class="w-full bg-slate-800 border border-amber-500 rounded-xl p-2.5 text-sm text-white">
+                        <option value="0">الاختيار الأول</option>
+                        <option value="1">الاختيار الثاني</option>
+                        <option value="2">الاختيار الثالث</option>
+                        <option value="3">الاختيار الرابع</option>
+                    </select>
                 </div>
             </div>
             <div class="flex justify-end gap-2 pt-2">
@@ -125,28 +140,12 @@
         </div>
     </div>
 
-    <!-- نافذة إرسال الإجابة -->
-    <div id="submit-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
-            <h3 class="text-lg font-bold text-white">إرسال إجابة التحدي</h3>
-            <p class="text-xs text-slate-300" id="modal-ch-title"></p>
-            <div>
-                <label class="block text-xs font-semibold text-slate-400 mb-1">إجابتك / حلك:</label>
-                <textarea id="user-answer-text" rows="4" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="اكتب إجابتك هنا..."></textarea>
-            </div>
-            <div class="flex justify-end gap-2">
-                <button onclick="closeModal('submit-modal')" class="px-4 py-2 bg-slate-800 rounded-xl text-xs font-semibold">إلغاء</button>
-                <button onclick="submitUserAnswer()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-xs font-bold text-white shadow">تحقق وأرسل</button>
-            </div>
-        </div>
-    </div>
-
     <!-- رسالة التنبيه -->
     <div id="toast" class="fixed bottom-5 left-5 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-xl hidden text-xs font-bold z-50 flex items-center gap-2">
         <i class="fa-solid fa-circle-check"></i> <span id="toast-text">تم بنجاح</span>
     </div>
 
-    <!-- الجافاسكريبت والربط السحابي الصحيح -->
+    <!-- الجافاسكريبت والربط السحابي -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
@@ -163,16 +162,16 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let currentUser = JSON.parse(localStorage.getItem('current_user_v6')) || null;
+        let currentUser = JSON.parse(localStorage.getItem('current_user_v7')) || null;
         let currentDay = 1;
         const ADMIN_SECRET = "1234";
 
-        let challenges = JSON.parse(localStorage.getItem('challenges_data_v6')) || {
-            1: { title: "تحدي الكلينيكال", desc: "أدخل السؤال هنا...", modelAnswer: "باراسيتامول" },
-            2: { title: "تحدي التواصل", desc: "أدخل السؤال هنا...", modelAnswer: "اتصال" },
-            3: { title: "تحدي الأونكولوجي", desc: "أدخل السؤال هنا...", modelAnswer: "أورام" },
-            4: { title: "صناعة المحتوى", desc: "أدخل السؤال هنا...", modelAnswer: "محتوى" },
-            5: { title: "تحدي الفريلانسينج", desc: "أدخل السؤال هنا...", modelAnswer: "فريق" }
+        let challenges = JSON.parse(localStorage.getItem('challenges_data_v7')) || {
+            1: { title: "تحدي اليوم الأول", desc: "أدخل السؤال من لوحة الأدمن...", opts: ["خيار أ", "خيار ب", "خيار ج", "خيار د"], correct: 0 },
+            2: { title: "تحدي اليوم الثاني", desc: "أدخل السؤال من لوحة الأدمن...", opts: ["خيار أ", "خيار ب", "خيار ج", "خيار د"], correct: 0 },
+            3: { title: "تحدي اليوم الثالث", desc: "أدخل السؤال من لوحة الأدمن...", opts: ["خيار أ", "خيار ب", "خيار ج", "خيار د"], correct: 0 },
+            4: { title: "تحدي اليوم الرابع", desc: "أدخل السؤال من لوحة الأدمن...", opts: ["خيار أ", "خيار ب", "خيار ج", "خيار د"], correct: 0 },
+            5: { title: "تحدي اليوم الخامس", desc: "أدخل السؤال من لوحة الأدمن...", opts: ["خيار أ", "خيار ب", "خيار ج", "خيار د"], correct: 0 }
         };
 
         window.handleLogin = async function() {
@@ -183,7 +182,7 @@
                 return;
             }
             currentUser = { name: name, email: email };
-            localStorage.setItem('current_user_v6', JSON.stringify(currentUser));
+            localStorage.setItem('current_user_v7', JSON.stringify(currentUser));
             
             try {
                 const userRef = doc(db, "users", email);
@@ -234,18 +233,61 @@
         function renderChallengeCard() {
             const ch = challenges[currentDay];
             const container = document.getElementById('challenge-card-container');
+            
+            let optsHtml = '';
+            if(ch.opts && ch.opts.length > 0) {
+                ch.opts.forEach((opt, idx) => {
+                    optsHtml += `
+                        <button onclick="submitAnswer(${idx})" class="w-full text-right bg-slate-700/50 hover:bg-indigo-600 border border-slate-600/60 p-3.5 rounded-xl text-sm font-semibold transition flex items-center justify-between group">
+                            <span>${opt}</span>
+                            <span class="w-6 h-6 rounded-lg bg-slate-800 group-hover:bg-indigo-700 flex items-center justify-center text-xs text-slate-300 font-bold">${String.fromCharCode(65 + idx)}</span>
+                        </button>
+                    `;
+                });
+            }
+
             container.innerHTML = `
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-3">
-                    <div>
-                        <h3 class="text-lg font-bold text-white">${ch.title}</h3>
-                    </div>
-                    <button onclick="openSubmitModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-paper-plane"></i> حل التحدي وإرسال الإجابة
-                    </button>
+                <div class="mb-4">
+                    <h3 class="text-lg font-bold text-white mb-2">${ch.title}</h3>
+                    <p class="text-slate-300 text-xs leading-relaxed bg-slate-900/60 p-3.5 rounded-xl border border-slate-700/50">${ch.desc}</p>
                 </div>
-                <p class="text-slate-300 text-xs leading-relaxed bg-slate-900/60 p-3.5 rounded-xl border border-slate-700/50">${ch.desc}</p>
+                <div class="space-y-2.5 pt-2 border-t border-slate-700/50">
+                    <p class="text-xs font-bold text-indigo-300 mb-2">اختر الإجابة الصحيحة:</p>
+                    ${optsHtml}
+                </div>
             `;
         }
+
+        window.submitAnswer = async function(chosenIdx) {
+            const ch = challenges[currentDay];
+            
+            try {
+                const userRef = doc(db, "users", currentUser.email);
+                const userSnap = await getDoc(userRef);
+                let userData = userSnap.data() || { name: currentUser.name, email: currentUser.email, score: 0, solvedDays: [] };
+
+                if(userData.solvedDays && userData.solvedDays.includes(currentDay)) {
+                    alert("لقد قمت بحل هذا التحدي مسبقاً ولا يمكنك تكرار أخذ النقاط!");
+                    return;
+                }
+
+                if(chosenIdx === parseInt(ch.correct)) {
+                    userData.score = (userData.score || 0) + 100;
+                    if(!userData.solvedDays) userData.solvedDays = [];
+                    userData.solvedDays.push(currentDay);
+
+                    await setDoc(userRef, userData);
+                    
+                    await updateScoreHeader();
+                    await renderLeaderboard();
+                    showToast("إجابة صحيحة! تم إضافة 100 نقطة 🎉");
+                } else {
+                    alert("إجابة خاطئة، حاول مجدداً!");
+                }
+            } catch(e) {
+                alert("حدث خطأ أثناء الاتصال بقاعدة البيانات.");
+            }
+        };
 
         async function renderLeaderboard() {
             const container = document.getElementById('leaderboard-list');
@@ -312,7 +354,11 @@
             const ch = challenges[day];
             document.getElementById('admin-title').value = ch.title;
             document.getElementById('admin-desc').value = ch.desc;
-            document.getElementById('admin-model-answer').value = ch.modelAnswer || "";
+            document.getElementById('admin-correct-idx').value = ch.correct !== undefined ? ch.correct : 0;
+            
+            for(let i=0; i<4; i++) {
+                document.getElementById(`admin-opt-${i}`).value = (ch.opts && ch.opts[i]) ? ch.opts[i] : "";
+            }
         };
 
         window.saveAdminChanges = function() {
@@ -320,68 +366,23 @@
             challenges[day] = {
                 title: document.getElementById('admin-title').value,
                 desc: document.getElementById('admin-desc').value,
-                modelAnswer: document.getElementById('admin-model-answer').value
+                opts: [
+                    document.getElementById('admin-opt-0').value,
+                    document.getElementById('admin-opt-1').value,
+                    document.getElementById('admin-opt-2').value,
+                    document.getElementById('admin-opt-3').value
+                ],
+                correct: parseInt(document.getElementById('admin-correct-idx').value)
             };
-            localStorage.setItem('challenges_data_v6', JSON.stringify(challenges));
+            localStorage.setItem('challenges_data_v7', JSON.stringify(challenges));
             closeModal('admin-modal');
             renderChallengeCard();
             showToast("تم تحديث التحدي بنجاح!");
         };
 
-        window.openSubmitModal = function() {
-            document.getElementById('modal-ch-title').innerText = challenges[currentDay].title;
-            document.getElementById('user-answer-text').value = '';
-            document.getElementById('submit-modal').classList.remove('hidden');
-            document.getElementById('submit-modal').classList.add('flex');
-        };
-
         window.closeModal = function(id) {
             document.getElementById(id).classList.remove('flex');
             document.getElementById(id).classList.add('hidden');
-        };
-
-        window.submitUserAnswer = async function() {
-            const userAns = document.getElementById('user-answer-text').value.trim().toLowerCase();
-            const modelAns = (challenges[currentDay].modelAnswer || "").trim().toLowerCase();
-
-            if(!userAns) {
-                alert("الرجاء كتابة الحل أولاً!");
-                return;
-            }
-
-            if(!modelAns) {
-                alert("لم يقم الأدمن بتحديد إجابة نموذجية لهذا التحدي بعد!");
-                return;
-            }
-
-            try {
-                const userRef = doc(db, "users", currentUser.email);
-                const userSnap = await getDoc(userRef);
-                let userData = userSnap.data() || { name: currentUser.name, email: currentUser.email, score: 0, solvedDays: [] };
-
-                if(userData.solvedDays && userData.solvedDays.includes(currentDay)) {
-                    alert("لقد قمت بحل هذا التحدي مسبقاً ولا يمكنك تكرار أخذ النقاط!");
-                    closeModal('submit-modal');
-                    return;
-                }
-
-                if(userAns.includes(modelAns) || modelAns.includes(userAns)) {
-                    userData.score = (userData.score || 0) + 100;
-                    if(!userData.solvedDays) userData.solvedDays = [];
-                    userData.solvedDays.push(currentDay);
-
-                    await setDoc(userRef, userData);
-                    
-                    await updateScoreHeader();
-                    await renderLeaderboard();
-                    closeModal('submit-modal');
-                    showToast("إجابة صحيحة! تم إضافة 100 نقطة 🎉");
-                } else {
-                    alert("الإجابة غير مطابقة للإجابة النموذجية. حاول مجدداً!");
-                }
-            } catch(e) {
-                alert("حدث خطأ أثناء الاتصال بقاعدة البيانات.");
-            }
         };
 
         function showToast(msg) {
