@@ -2,6 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 5-Day Challenge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -77,9 +79,11 @@
                 <h3 class="text-md font-bold flex items-center gap-2 text-white">
                     <i class="fa-solid fa-medal text-amber-400"></i> لوحة الصدارة (Top Participants)
                 </h3>
-                <span class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-slate-300">محدث فورياً</span>
+                <span class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-slate-300">محدث سحابياً فورياً</span>
             </div>
-            <div class="divide-y divide-slate-700" id="leaderboard-list"></div>
+            <div class="divide-y divide-slate-700" id="leaderboard-list">
+                <p class="text-xs text-slate-400 text-center py-2">جاري جلب لوحة الصدارة...</p>
+            </div>
         </section>
     </main>
 
@@ -116,7 +120,7 @@
             </div>
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeModal('admin-modal')" class="px-4 py-2 bg-slate-800 rounded-xl text-xs font-semibold">إلغاء</button>
-                <button onclick="saveAdminChanges()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 rounded-xl text-xs font-bold text-white shadow">حفظ الإجابة</button>
+                <button onclick="saveAdminChanges()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 rounded-xl text-xs font-bold text-white shadow">حفظ التعديلات</button>
             </div>
         </div>
     </div>
@@ -142,12 +146,29 @@
         <i class="fa-solid fa-circle-check"></i> <span id="toast-text">تم بنجاح</span>
     </div>
 
-    <!-- كود الجافاسكريبت -->
-    <script>
+    <!-- الجافاسكريبت والربط السحابي (Firebase) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateCode, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // إعدادات فايربيس الخاصة بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMxfI1fHY0nXbkrX3Vl9a1Zq_h-85mS8Y",
+            authDomain: "challenge5days.firebaseapp.com",
+            projectId: "challenge5days",
+            storageBucket: "challenge5days.appspot.com",
+            messagingSenderId: "404505595178",
+            appId: "1:404505595178:web:8d514856f4d3663b655f01"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         let currentUser = JSON.parse(localStorage.getItem('current_user_v6')) || null;
         let currentDay = 1;
         const ADMIN_SECRET = "1234";
 
+        // التحديات الافتراضية
         let challenges = JSON.parse(localStorage.getItem('challenges_data_v6')) || {
             1: { title: "تحدي الكلينيكال", desc: "أدخل السؤال هنا...", modelAnswer: "باراسيتامول" },
             2: { title: "تحدي التواصل", desc: "أدخل السؤال هنا...", modelAnswer: "اتصال" },
@@ -156,11 +177,9 @@
             5: { title: "تحدي الفريلانسينج", desc: "أدخل السؤال هنا...", modelAnswer: "فريق" }
         };
 
-        let usersList = JSON.parse(localStorage.getItem('users_list_v6')) || [];
-
-        function handleLogin() {
+        window.handleLogin = async function() {
             const name = document.getElementById('auth-name').value.trim();
-            const email = document.getElementById('auth-email').value.trim();
+            const email = document.getElementById('auth-email').value.trim().toLowerCase();
             if(!name || !email) {
                 alert("الرجاء إدخال الاسم والبريد الإلكتروني!");
                 return;
@@ -168,28 +187,38 @@
             currentUser = { name: name, email: email };
             localStorage.setItem('current_user_v6', JSON.stringify(currentUser));
             
-            let existing = usersList.find(u => u.email === email);
-            if(!existing) {
-                usersList.push({ name: name, email: email, score: 0, solvedDays: [] });
-                saveUsers();
-            } else {
-                existing.name = name; // تحديث الاسم لو تغير
-                saveUsers();
+            // التحقق من قاعدة البيانات سحابياً وتسجيل المستخدم إذا لم يكن موجوداً
+            try {
+                const userRef = doc(db, "users", email);
+                const userSnap = await getDoc(userRef);
+                if(!userSnap.exists()) {
+                    await setDoc(userRef, { name: name, email: email, score: 0, solvedDays: [] });
+                } else {
+                    await setDoc(userRef, { name: name }, { merge: true }); // تحديث الاسم لو تغير
+                }
+            } catch(e) {
+                console.log("خطأ في الاتصال بقاعدة البيانات", e);
             }
 
             location.reload();
-        }
+        };
 
-        function initApp() {
+        async function initApp() {
             if(currentUser) {
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('current-user-display').innerText = `مرحباً، ${currentUser.name}`;
-                updateScoreHeader();
+                await updateScoreHeader();
                 renderDaysTabs();
                 renderChallengeCard();
                 renderLeaderboard();
             }
         }
+
+        window.switchDay = function(day) {
+            currentDay = day;
+            renderDaysTabs();
+            renderChallengeCard();
+        };
 
         function renderDaysTabs() {
             const container = document.getElementById('days-tabs');
@@ -203,12 +232,6 @@
                     </button>
                 `;
             }
-        }
-
-        function switchDay(day) {
-            currentDay = day;
-            renderDaysTabs();
-            renderChallengeCard();
         }
 
         function renderChallengeCard() {
@@ -227,45 +250,59 @@
             `;
         }
 
-        function renderLeaderboard() {
-            // ترتيب المستخدمين تنازلياً حسب النقاط (أعلى نقاط أولاً) واخذ أول 10
-            usersList.sort((a, b) => b.score - a.score);
-            const topUsers = usersList.slice(0, 10);
-            
+        async function renderLeaderboard() {
             const container = document.getElementById('leaderboard-list');
-            container.innerHTML = '';
-            
-            if(topUsers.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">لا يوجد مشاركون بعد.</p>`;
-                return;
-            }
+            try {
+                const q = query(collection(db, "users"), orderBy("score", "desc"), limit(10));
+                const querySnapshot = await getDocs(q);
+                container.innerHTML = '';
+                
+                let usersList = [];
+                querySnapshot.forEach((doc) => {
+                    usersList.push(doc.data());
+                });
 
-            topUsers.forEach((u, idx) => {
-                container.innerHTML += `
-                    <div class="flex items-center justify-between py-2.5 text-xs">
-                        <div class="flex items-center gap-2.5">
-                            <span class="font-bold text-amber-400">#${idx+1}</span>
-                            <span class="font-semibold text-white">${u.name}</span>
+                if(usersList.length === 0) {
+                    container.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">لا يوجد مشاركون بعد.</p>`;
+                    return;
+                }
+
+                usersList.forEach((u, idx) => {
+                    container.innerHTML += `
+                        <div class="flex items-center justify-between py-2.5 text-xs">
+                            <div class="flex items-center gap-2.5">
+                                <span class="font-bold text-amber-400">#${idx+1}</span>
+                                <span class="font-semibold text-white">${u.name}</span>
+                            </div>
+                            <span class="text-indigo-400 font-bold bg-indigo-950/40 px-2.5 py-1 rounded border border-indigo-900/50">${u.score} نقطة</span>
                         </div>
-                        <span class="text-indigo-400 font-bold bg-indigo-950/40 px-2.5 py-1 rounded border border-indigo-900/50">${u.score} نقطة</span>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            } catch(e) {
+                container.innerHTML = `<p class="text-xs text-red-400 text-center py-2">خطأ في تحميل لوحة الصدارة سحابياً.</p>`;
+            }
         }
 
-        function updateScoreHeader() {
-            let u = usersList.find(x => x.email === currentUser.email);
-            document.getElementById('header-score').innerText = u ? u.score : 0;
+        async function updateScoreHeader() {
+            try {
+                const userRef = doc(db, "users", currentUser.email);
+                const userSnap = await getDoc(userRef);
+                if(userSnap.exists()) {
+                    document.getElementById('header-score').innerText = userSnap.data().score || 0;
+                }
+            } catch(e) {
+                console.log(e);
+            }
         }
 
-        function requestAdminAccess() {
+        window.requestAdminAccess = function() {
             const pass = prompt("أدخل كلمة مرور الأدمن:");
             if(pass === ADMIN_SECRET) {
                 openAdminPanel();
             } else if(pass !== null) {
                 alert("كلمة المرور غير صحيحة!");
             }
-        }
+        };
 
         function openAdminPanel() {
             loadAdminDayData();
@@ -273,15 +310,15 @@
             document.getElementById('admin-modal').classList.add('flex');
         }
 
-        function loadAdminDayData() {
+        window.loadAdminDayData = function() {
             const day = document.getElementById('admin-day-select').value;
             const ch = challenges[day];
             document.getElementById('admin-title').value = ch.title;
             document.getElementById('admin-desc').value = ch.desc;
             document.getElementById('admin-model-answer').value = ch.modelAnswer || "";
-        }
+        };
 
-        function saveAdminChanges() {
+        window.saveAdminChanges = function() {
             const day = document.getElementById('admin-day-select').value;
             challenges[day] = {
                 title: document.getElementById('admin-title').value,
@@ -292,21 +329,21 @@
             closeModal('admin-modal');
             renderChallengeCard();
             showToast("تم تحديث التحدي والإجابة النموذجية بنجاح!");
-        }
+        };
 
-        function openSubmitModal() {
+        window.openSubmitModal = function() {
             document.getElementById('modal-ch-title').innerText = challenges[currentDay].title;
             document.getElementById('user-answer-text').value = '';
             document.getElementById('submit-modal').classList.remove('hidden');
             document.getElementById('submit-modal').classList.add('flex');
-        }
+        };
 
-        function closeModal(id) {
+        window.closeModal = function(id) {
             document.getElementById(id).classList.remove('flex');
             document.getElementById(id).classList.add('hidden');
-        }
+        };
 
-        function submitUserAnswer() {
+        window.submitUserAnswer = async function() {
             const userAns = document.getElementById('user-answer-text').value.trim().toLowerCase();
             const modelAns = (challenges[currentDay].modelAnswer || "").trim().toLowerCase();
 
@@ -320,31 +357,35 @@
                 return;
             }
 
-            let u = usersList.find(x => x.email === currentUser.email);
-            
-            if(u.solvedDays && u.solvedDays.includes(currentDay)) {
-                alert("لقد قمت بحل هذا التحدي مسبقاً ولا يمكنك تكرار أخذ النقاط!");
-                closeModal('submit-modal');
-                return;
-            }
+            try {
+                const userRef = doc(db, "users", currentUser.email);
+                const userSnap = await getDoc(userRef);
+                let userData = userSnap.data();
 
-            if(userAns.includes(modelAns) || modelAns.includes(userAns)) {
-                u.score += 100;
-                if(!u.solvedDays) u.solvedDays = [];
-                u.solvedDays.push(currentDay);
-                saveUsers();
-                updateScoreHeader();
-                renderLeaderboard();
-                closeModal('submit-modal');
-                showToast("إجابة صحيحة! تم إضافة 100 نقطة بنجاح 🎉");
-            } else {
-                alert("عذراً، الإجابة غير مطابقة للإجابة النموذجية الصحيحة. حاول مجدداً!");
-            }
-        }
+                if(userData.solvedDays && userData.solvedDays.includes(currentDay)) {
+                    alert("لقد قمت بحل هذا التحدي مسبقاً ولا يمكنك تكرار أخذ النقاط!");
+                    closeModal('submit-modal');
+                    return;
+                }
 
-        function saveUsers() {
-            localStorage.setItem('users_list_v6', JSON.stringify(usersList));
-        }
+                if(userAns.includes(modelAns) || modelAns.includes(userAns)) {
+                    userData.score = (userData.score || 0) + 100;
+                    if(!userData.solvedDays) userData.solvedDays = [];
+                    userData.solvedDays.push(currentDay);
+
+                    await setDoc(userRef, userData);
+                    
+                    await updateScoreHeader();
+                    await renderLeaderboard();
+                    closeModal('submit-modal');
+                    showToast("إجابة صحيحة! تم إضافة 100 نقطة بنجاح 🎉");
+                } else {
+                    alert("عذراً، الإجابة غير مطابقة للإجابة النموذجية الصحيحة. حاول مجدداً!");
+                }
+            } catch(e) {
+                alert("حدث خطأ أثناء الاتصال بقاعدة البيانات، تأكد من اتصال الإنترنت.");
+            }
+        };
 
         function showToast(msg) {
             const t = document.getElementById('toast');
