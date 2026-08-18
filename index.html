@@ -2,99 +2,104 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The 5-Day Challenge - MCQ</title>
+    <title>The 5-Day Challenge</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; }
-    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
-
-    <!-- شاشة تسجيل الدخول -->
+<body class="bg-slate-900 text-white min-h-screen">
     <div id="auth-screen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-8 shadow-2xl space-y-6">
-            <div class="text-center space-y-2">
-                <h2 class="text-2xl font-black text-white">The 5-Day Challenge</h2>
-                <p class="text-xs text-slate-400">سجل لدخول التحدي</p>
-            </div>
-            <div class="space-y-4">
-                <input type="text" id="auth-name" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="اسمك الكامل...">
-                <input type="email" id="auth-email" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white" placeholder="name@example.com">
-                <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white p-3.5 rounded-xl font-bold">دخول التحدي 🚀</button>
-            </div>
+        <div class="bg-slate-900 p-8 rounded-3xl w-full max-w-md shadow-2xl">
+            <h2 class="text-2xl font-black mb-6 text-center">دخول التحدي</h2>
+            <input type="text" id="auth-name" class="w-full bg-slate-800 p-3 rounded-xl mb-4" placeholder="اسمك الكامل">
+            <input type="email" id="auth-email" class="w-full bg-slate-800 p-3 rounded-xl mb-6" placeholder="الإيميل">
+            <button onclick="handleLogin()" class="w-full bg-indigo-600 p-3 rounded-xl font-bold">دخول 🚀</button>
         </div>
     </div>
 
-    <!-- الهيدر -->
-    <header class="bg-slate-800/80 p-4 sticky top-0 z-30">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <h1 class="text-lg font-bold">5-Day Challenge</h1>
-            <div class="flex items-center gap-3">
-                <span class="text-indigo-300 font-bold" id="header-score">0</span> نقطة
-                <button onclick="requestAdminAccess()" class="bg-amber-600 px-3 py-1.5 rounded-lg text-xs font-bold">الأدمن</button>
-            </div>
-        </div>
+    <header class="p-4 flex justify-between items-center max-w-4xl mx-auto">
+        <h1 class="font-bold">5-Day Challenge</h1>
+        <button onclick="openAdmin()" class="bg-amber-600 px-4 py-2 rounded-lg font-bold text-xs">الأدمن</button>
     </header>
 
-    <main class="flex-1 max-w-4xl w-full mx-auto p-4 space-y-6">
-        <section class="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-            <div class="grid grid-cols-5 gap-2" id="days-tabs"></div>
-        </section>
-
-        <section class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl" id="challenge-card-container"></section>
-        
-        <section class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl">
-            <h3 class="text-md font-bold mb-4">لوحة الصدارة</h3>
-            <div id="leaderboard-list"></div>
-        </section>
+    <main class="max-w-4xl mx-auto p-4" id="main-content">
+        <div id="challenge-area" class="bg-slate-800 p-6 rounded-2xl mb-6"></div>
+        <div id="leaderboard" class="bg-slate-800 p-6 rounded-2xl"></div>
     </main>
 
-    <!-- لوحة الأدمن (MCQ) -->
-    <div id="admin-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl p-6 space-y-3 overflow-y-auto max-h-[90vh]">
-            <h3 class="font-bold text-white mb-2">إعدادات التحدي (MCQ)</h3>
-            <select id="admin-day-select" onchange="loadAdminDayData()" class="w-full bg-slate-800 p-2 text-white rounded-lg"></select>
-            <input type="text" id="admin-title" placeholder="عنوان التحدي" class="w-full bg-slate-800 p-2 rounded-lg">
-            <textarea id="admin-desc" placeholder="نص السؤال" class="w-full bg-slate-800 p-2 rounded-lg"></textarea>
-            <input type="text" id="opt1" placeholder="الاختيار 1" class="w-full bg-slate-800 p-2 rounded-lg">
-            <input type="text" id="opt2" placeholder="الاختيار 2" class="w-full bg-slate-800 p-2 rounded-lg">
-            <input type="text" id="opt3" placeholder="الاختيار 3" class="w-full bg-slate-800 p-2 rounded-lg">
-            <input type="text" id="opt4" placeholder="الاختيار 4" class="w-full bg-slate-800 p-2 rounded-lg">
-            <select id="admin-correct-opt" class="w-full bg-slate-800 p-2 text-white rounded-lg">
-                <option value="0">الإجابة الصحيحة هي: 1</option>
-                <option value="1">الإجابة الصحيحة هي: 2</option>
-                <option value="2">الإجابة الصحيحة هي: 3</option>
-                <option value="3">الإجابة الصحيحة هي: 4</option>
+    <!-- Admin Modal -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 p-6 rounded-2xl w-full max-w-lg">
+            <h2 class="font-bold mb-4">إعدادات الأدمن</h2>
+            <input id="adm-q" class="w-full bg-slate-800 p-2 mb-2" placeholder="السؤال">
+            <input id="adm-opt1" class="w-full bg-slate-800 p-2 mb-2" placeholder="خيار 1">
+            <input id="adm-opt2" class="w-full bg-slate-800 p-2 mb-2" placeholder="خيار 2">
+            <input id="adm-opt3" class="w-full bg-slate-800 p-2 mb-2" placeholder="خيار 3">
+            <input id="adm-opt4" class="w-full bg-slate-800 p-2 mb-2" placeholder="خيار 4">
+            <select id="adm-corr" class="w-full bg-slate-800 p-2 mb-4">
+                <option value="0">خيار 1 صحيح</option><option value="1">خيار 2 صحيح</option>
+                <option value="2">خيار 3 صحيح</option><option value="3">خيار 4 صحيح</option>
             </select>
-            <div class="flex gap-2">
-                <button onclick="closeModal('admin-modal')" class="flex-1 bg-slate-800 p-2 rounded-lg">إلغاء</button>
-                <button onclick="saveAdminChanges()" class="flex-1 bg-amber-600 p-2 rounded-lg font-bold">حفظ التعديلات</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة إرسال الحل (MCQ) -->
-    <div id="submit-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 w-full max-w-md rounded-2xl p-6 space-y-4">
-            <h3 class="font-bold" id="modal-ch-title"></h3>
-            <p class="text-sm" id="modal-ch-desc"></p>
-            <div id="options-container" class="space-y-2"></div>
-            <button onclick="closeModal('submit-modal')" class="w-full bg-slate-800 p-2 rounded-lg">إلغاء</button>
+            <button onclick="saveAdmin()" class="w-full bg-amber-600 p-2 rounded-lg">حفظ</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyBMxfI1fHY0nXbkrX3Vl9a1Zq_h-85mS8Y", authDomain: "challenge5days.firebaseapp.com", projectId: "challenge5days", storageBucket: "challenge5days.appspot.com", messagingSenderId: "404505595178", appId: "1:404505595178:web:8d514856f4d3663b655f01" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ... (باقي المنطق الخاص بالتطبيق سيعمل بنفس الربط السحابي السابق)
+        window.handleLogin = async () => {
+            const name = document.getElementById('auth-name').value;
+            const email = document.getElementById('auth-email').value;
+            if(!name || !email) return alert("اكتب الاسم والإيميل");
+            
+            await setDoc(doc(db, "users", email), { name, email, score: 0 }, { merge: true });
+            localStorage.setItem('user', JSON.stringify({name, email}));
+            location.reload();
+        };
+
+        // دالة عرض التحدي
+        window.renderChallenge = (data) => {
+            const area = document.getElementById('challenge-area');
+            area.innerHTML = `<h3>${data.q}</h3>` + data.opts.map((o, i) => 
+                `<button onclick="checkAnswer(${i})" class="block w-full bg-indigo-600 p-3 rounded-lg mt-2">${o}</button>`
+            ).join('');
+        };
+
+        window.checkAnswer = async (idx) => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const data = JSON.parse(localStorage.getItem('ch_data'));
+            if(idx == data.corr) {
+                const userRef = doc(db, "users", user.email);
+                const snap = await getDoc(userRef);
+                const newScore = (snap.data().score || 0) + 100;
+                await setDoc(userRef, { score: newScore }, { merge: true });
+                alert("إجابة صحيحة! +100 نقطة");
+                location.reload();
+            } else {
+                alert("خطأ! حاول تاني");
+            }
+        };
+
+        window.openAdmin = () => document.getElementById('admin-modal').classList.remove('hidden');
+        window.saveAdmin = () => {
+            const data = {
+                q: document.getElementById('adm-q').value,
+                opts: [document.getElementById('adm-opt1').value, document.getElementById('adm-opt2').value, document.getElementById('adm-opt3').value, document.getElementById('adm-opt4').value],
+                corr: document.getElementById('adm-corr').value
+            };
+            localStorage.setItem('ch_data', JSON.stringify(data));
+            alert("تم حفظ التحدي، اعمل ريفرش!");
+            location.reload();
+        };
+
+        // تحميل أولي
+        const savedUser = localStorage.getItem('user');
+        if(savedUser) document.getElementById('auth-screen').classList.add('hidden');
+        const savedData = JSON.parse(localStorage.getItem('ch_data'));
+        if(savedData) renderChallenge(savedData);
     </script>
 </body>
 </html>
