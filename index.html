@@ -146,12 +146,11 @@
         <i class="fa-solid fa-circle-check"></i> <span id="toast-text">تم بنجاح</span>
     </div>
 
-    <!-- الجافاسكريبت والربط السحابي (Firebase) -->
+    <!-- الجافاسكريبت والربط السحابي الصحيح -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateCode, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        // إعدادات فايربيس الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyBMxfI1fHY0nXbkrX3Vl9a1Zq_h-85mS8Y",
             authDomain: "challenge5days.firebaseapp.com",
@@ -168,7 +167,6 @@
         let currentDay = 1;
         const ADMIN_SECRET = "1234";
 
-        // التحديات الافتراضية
         let challenges = JSON.parse(localStorage.getItem('challenges_data_v6')) || {
             1: { title: "تحدي الكلينيكال", desc: "أدخل السؤال هنا...", modelAnswer: "باراسيتامول" },
             2: { title: "تحدي التواصل", desc: "أدخل السؤال هنا...", modelAnswer: "اتصال" },
@@ -187,17 +185,16 @@
             currentUser = { name: name, email: email };
             localStorage.setItem('current_user_v6', JSON.stringify(currentUser));
             
-            // التحقق من قاعدة البيانات سحابياً وتسجيل المستخدم إذا لم يكن موجوداً
             try {
                 const userRef = doc(db, "users", email);
                 const userSnap = await getDoc(userRef);
                 if(!userSnap.exists()) {
                     await setDoc(userRef, { name: name, email: email, score: 0, solvedDays: [] });
                 } else {
-                    await setDoc(userRef, { name: name }, { merge: true }); // تحديث الاسم لو تغير
+                    await setDoc(userRef, { name: name }, { merge: true });
                 }
             } catch(e) {
-                console.log("خطأ في الاتصال بقاعدة البيانات", e);
+                console.log("خطأ في الاتصال", e);
             }
 
             location.reload();
@@ -279,7 +276,7 @@
                     `;
                 });
             } catch(e) {
-                container.innerHTML = `<p class="text-xs text-red-400 text-center py-2">خطأ في تحميل لوحة الصدارة سحابياً.</p>`;
+                container.innerHTML = `<p class="text-xs text-red-400 text-center py-2">خطأ في تحميل لوحة الصدارة.</p>`;
             }
         }
 
@@ -328,7 +325,7 @@
             localStorage.setItem('challenges_data_v6', JSON.stringify(challenges));
             closeModal('admin-modal');
             renderChallengeCard();
-            showToast("تم تحديث التحدي والإجابة النموذجية بنجاح!");
+            showToast("تم تحديث التحدي بنجاح!");
         };
 
         window.openSubmitModal = function() {
@@ -353,14 +350,14 @@
             }
 
             if(!modelAns) {
-                alert("عذراً، لم يقم الأدمن بتحديد إجابة نموذجية لهذا التحدي بعد!");
+                alert("لم يقم الأدمن بتحديد إجابة نموذجية لهذا التحدي بعد!");
                 return;
             }
 
             try {
                 const userRef = doc(db, "users", currentUser.email);
                 const userSnap = await getDoc(userRef);
-                let userData = userSnap.data();
+                let userData = userSnap.data() || { name: currentUser.name, email: currentUser.email, score: 0, solvedDays: [] };
 
                 if(userData.solvedDays && userData.solvedDays.includes(currentDay)) {
                     alert("لقد قمت بحل هذا التحدي مسبقاً ولا يمكنك تكرار أخذ النقاط!");
@@ -378,12 +375,12 @@
                     await updateScoreHeader();
                     await renderLeaderboard();
                     closeModal('submit-modal');
-                    showToast("إجابة صحيحة! تم إضافة 100 نقطة بنجاح 🎉");
+                    showToast("إجابة صحيحة! تم إضافة 100 نقطة 🎉");
                 } else {
-                    alert("عذراً، الإجابة غير مطابقة للإجابة النموذجية الصحيحة. حاول مجدداً!");
+                    alert("الإجابة غير مطابقة للإجابة النموذجية. حاول مجدداً!");
                 }
             } catch(e) {
-                alert("حدث خطأ أثناء الاتصال بقاعدة البيانات، تأكد من اتصال الإنترنت.");
+                alert("حدث خطأ أثناء الاتصال بقاعدة البيانات.");
             }
         };
 
