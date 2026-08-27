@@ -52,19 +52,20 @@
         <div id="card-login" class="bg-[#121826] p-8 rounded-3xl shadow-2xl max-w-md w-full space-y-6 neon-purple-box">
             <div class="text-center space-y-2">
                 <h2 class="text-2xl font-black text-white neon-purple-glow">تسجيل الدخول للتحدي</h2>
-                <p class="text-xs text-purple-300/80">سجل بياناتك للبدء والانضمام للوحة الشرف</p>
+                <p class="text-xs text-purple-300/80">سجل بياناتك (بالعربي أو الإنجليزي) للبدء فوراً</p>
             </div>
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-purple-300 mb-1">الاسم الثلاثي</label>
-                    <input type="text" id="login-name" class="w-full bg-[#0b0f19] border border-purple-500/30 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-500/50 transition" placeholder="مثال: أحمد محمد">
+                    <label class="block text-xs font-bold text-purple-300 mb-1">الاسم</label>
+                    <input type="text" id="login-name" class="w-full bg-[#0b0f19] border border-purple-500/30 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-500/50 transition" placeholder="مثال: أحمد محمد أو Ahmed Mohamed">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-purple-300 mb-1">البريد الإلكتروني (Gmail)</label>
                     <input type="email" id="login-email" class="w-full bg-[#0b0f19] border border-purple-500/30 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-500/50 transition" placeholder="name@gmail.com">
                 </div>
-                <button type="button" onclick="performLogin()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(147,51,234,0.5)] cursor-pointer">
+                <!-- زر تسجيل دخول مباشر لا يعتمد على تحميل السيرفر لتفادي أي تعليق -->
+                <button type="button" onclick="executeInstantLogin()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(147,51,234,0.5)] cursor-pointer">
                     دخول التحدي الآن
                 </button>
             </div>
@@ -83,12 +84,12 @@
             <!-- Challenge Section -->
             <div id="view-challenge" class="bg-[#121826] p-6 sm:p-8 rounded-3xl shadow-2xl neon-purple-box space-y-6">
                 <div class="flex justify-between items-center border-b border-purple-500/20 pb-3">
-                    <span class="text-xs font-bold text-purple-400">سؤال التحدي المباشر</span>
+                    <span class="text-xs font-bold text-purple-400">سؤال التحدي المباشر (متزامن للكل)</span>
                     <span id="score-counter" class="text-xs font-bold text-emerald-400">نقاطك: 0</span>
                 </div>
 
                 <div class="space-y-4">
-                    <h3 id="question-label" class="text-lg font-bold text-white leading-relaxed">جاري تحميل السؤال...</h3>
+                    <h3 id="question-label" class="text-lg font-bold text-white leading-relaxed">جاري تحميل السؤال الموحد...</h3>
                     <div id="options-box" class="space-y-3">
                         <!-- Options injected dynamically -->
                     </div>
@@ -103,7 +104,7 @@
             <!-- Leaderboard Section -->
             <div id="view-leaderboard" class="hidden bg-[#121826] p-6 sm:p-8 rounded-3xl shadow-2xl neon-purple-box space-y-4">
                 <h3 class="text-lg font-bold text-purple-400 border-b border-purple-500/20 pb-3 flex items-center gap-2 neon-purple-glow">
-                    <i class="fa-solid fa-medal"></i> أبطال الكلية (Top 10)
+                    <i class="fa-solid fa-medal"></i> أبطال الكلية (Top 10 المباشر)
                 </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right border-collapse">
@@ -124,12 +125,12 @@
             <!-- Admin Section -->
             <div id="view-admin" class="hidden bg-[#121826] p-6 sm:p-8 rounded-3xl shadow-2xl border-2 border-rose-500/50 space-y-4 shadow-[0_0_20px_rgba(244,63,94,0.3)]">
                 <h3 class="text-lg font-bold text-rose-400 border-b border-rose-500/20 pb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-gear"></i> لوحة تحكم الأدمن (التحكم بالأسئلة للكل)
+                    <i class="fa-solid fa-gear"></i> لوحة تحكم الأدمن (نشر الأسئلة لجميع الطلاب)
                 </h3>
                 <div class="space-y-3">
                     <div>
                         <label class="block text-xs text-purple-300 mb-1">نص السؤال</label>
-                        <textarea id="admin-q-text" rows="2" class="w-full bg-[#0b0f19] border border-rose-500/30 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-rose-400" placeholder="اكتب السؤال هنا..."></textarea>
+                        <textarea id="admin-q-text" rows="2" class="w-full bg-[#0b0f19] border border-rose-500/30 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-rose-400" placeholder="اكتب السؤال الجديد هنا..."></textarea>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <input type="text" id="admin-opt-0" placeholder="الاختيار الأول" class="bg-[#0b0f19] border border-purple-500/20 rounded-xl p-3 text-white text-sm">
@@ -173,13 +174,13 @@
         const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-challenge-app';
 
-        let activeAuthUser = null;
-        let selectedOptionIdx = null;
-        let currentSharedQuestion = null;
-        let userPoints = 0;
-
+        window.activeAuthUser = null;
+        window.selectedOptionIdx = null;
+        window.currentSharedQuestion = null;
+        window.userPoints = 0;
         const ADMIN_EMAIL = "medo@gmail.com";
 
+        // التحقق من المصادقة في الخلفية بصمت تام
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -188,58 +189,54 @@
                     await signInAnonymously(auth);
                 }
             } catch (err) {
-                console.error("Auth error:", err);
+                console.error("Auth init warning:", err);
             }
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    activeAuthUser = user;
-                    const savedName = localStorage.getItem('user_name_v3');
-                    const savedEmail = localStorage.getItem('user_email_v3');
-                    if (savedName && savedEmail) {
-                        document.getElementById('login-name').value = savedName;
-                        document.getElementById('login-email').value = savedEmail;
-                        activateDashboard(savedName, savedEmail);
-                    }
+                    window.activeAuthUser = user;
                 }
             });
 
-            // ربط زر تأكيد الإجابة
-            document.getElementById('submit-btn').addEventListener('click', submitAnswerAction);
-
-            // الاستماع اللحظي للأسئلة الموحدة
-            const questionRef = doc(db, 'artifacts', appId, 'public', 'data', 'purple_neon_shared_question_v3');
+            // تفعيل الاستماع اللحظي للأسئلة الموحدة
+            const questionRef = doc(db, 'artifacts', appId, 'public', 'data', 'purple_neon_shared_question_v4');
             onSnapshot(questionRef, (snap) => {
                 if (snap.exists()) {
-                    currentSharedQuestion = snap.data();
-                    renderQuestionUI(currentSharedQuestion);
+                    window.currentSharedQuestion = snap.data();
+                    renderQuestionUI(window.currentSharedQuestion);
                 } else {
-                    currentSharedQuestion = {
-                        question: "في انتظار الأدمن لتعيين السؤال...",
+                    window.currentSharedQuestion = {
+                        question: "في انتظار الأدمن لتعيين وإرسال السؤال الأول...",
                         options: ["قريباً", "قريباً", "قريباً", "قريباً"],
                         correct: 0
                     };
-                    renderQuestionUI(currentSharedQuestion);
+                    renderQuestionUI(window.currentSharedQuestion);
                 }
             });
+
+            // التحقق لو كان مسجلاً مسبقاً من الجلسة السابقة
+            const savedName = localStorage.getItem('user_name_v4');
+            const savedEmail = localStorage.getItem('user_email_v4');
+            if (savedName && savedEmail) {
+                document.getElementById('login-name').value = savedName;
+                document.getElementById('login-email').value = savedEmail;
+            }
         });
 
-        // دالة تسجيل الدخول المباشرة المرتبطة بزر HTML مباشرة
-        window.performLogin = function() {
+        // دالة الدخول الفورية التي تعمل بضغطة زر واحدة مهما كانت الظروف
+        window.executeInstantLogin = function() {
             const name = document.getElementById('login-name').value.trim();
             const email = document.getElementById('login-email').value.trim();
 
             if (!name || !email) {
-                alert("يرجى ملء حقل الاسم والبريد الإلكتروني أولاً!");
+                alert("يرجى كتابة الاسم والبريد الإلكتروني أولاً!");
                 return;
             }
 
-            localStorage.setItem('user_name_v3', name);
-            localStorage.setItem('user_email_v3', email);
-            activateDashboard(name, email);
-        }
+            localStorage.setItem('user_name_v4', name);
+            localStorage.setItem('user_email_v4', email);
 
-        function activateDashboard(name, email) {
+            // إخفاء شاشة تسجيل الدخول وإظهار الداشبورد فوراً
             document.getElementById('card-login').classList.add('hidden');
             document.getElementById('card-dashboard').classList.remove('hidden');
 
@@ -247,10 +244,11 @@
             badge.innerText = name;
             badge.classList.remove('hidden');
 
-            if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() || name.toLowerCase() === 'admin') {
+            // تفعيل لوحة الأدمن لو كان هو الإيميل أو الاسم المحدد
+            if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() || name.toLowerCase() === 'admin' || name === 'مدو') {
                 document.getElementById('tab-admin').classList.remove('hidden');
             }
-        }
+        };
 
         window.switchTab = function(tabName) {
             document.getElementById('view-challenge').classList.add('hidden');
@@ -268,13 +266,13 @@
             if (tabName === 'leaderboard') {
                 fetchLeaderboardData();
             }
-        }
+        };
 
         function renderQuestionUI(qData) {
             document.getElementById('question-label').innerText = qData.question;
             const box = document.getElementById('options-box');
             box.innerHTML = '';
-            selectedOptionIdx = null;
+            window.selectedOptionIdx = null;
             document.getElementById('submit-btn').classList.add('hidden');
             document.getElementById('feedback-text').innerText = '';
 
@@ -294,43 +292,49 @@
                 b.classList.remove('bg-purple-600/20', 'border-purple-400', 'text-purple-300', 'shadow-[0_0_15px_rgba(168,85,247,0.4)]');
             }
             btnEl.classList.add('bg-purple-600/20', 'border-purple-400', 'text-purple-300', 'shadow-[0_0_15px_rgba(168,85,247,0.4)]');
-            selectedOptionIdx = idx;
+            window.selectedOptionIdx = idx;
             document.getElementById('submit-btn').classList.remove('hidden');
         }
 
-        async function submitAnswerAction() {
-            if (selectedOptionIdx === null || !currentSharedQuestion) return;
+        // ربط زر تأكيد الإجابة
+        document.addEventListener('DOMContentLoaded', () => {
+            const submitBtn = document.getElementById('submit-btn');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', async () => {
+                    if (window.selectedOptionIdx === null || !window.currentSharedQuestion) return;
 
-            const isCorrect = selectedOptionIdx === Number(currentSharedQuestion.correct);
-            const feedback = document.getElementById('feedback-text');
+                    const isCorrect = window.selectedOptionIdx === Number(window.currentSharedQuestion.correct);
+                    const feedback = document.getElementById('feedback-text');
 
-            if (isCorrect) {
-                feedback.className = "text-center font-bold text-sm text-emerald-400";
-                feedback.innerText = "إجابة صحيحة! تمت إضافة 10 نقاط لرصيدك 🏆";
-                userPoints += 10;
-                document.getElementById('score-counter').innerText = `نقاطك: ${userPoints}`;
+                    if (isCorrect) {
+                        feedback.className = "text-center font-bold text-sm text-emerald-400";
+                        feedback.innerText = "إجابة صحيحة! تمت إضافة 10 نقاط لرصيدك 🏆";
+                        window.userPoints += 10;
+                        document.getElementById('score-counter').innerText = `نقاطك: ${window.userPoints}`;
 
-                if (activeAuthUser) {
-                    const studentName = localStorage.getItem('user_name_v3') || "طالب";
-                    const scoreRef = doc(db, 'artifacts', appId, 'public', 'data', 'score_entry_v3_' + activeAuthUser.uid);
-                    await setDoc(scoreRef, {
-                        uid: activeAuthUser.uid,
-                        name: studentName,
-                        score: userPoints,
-                        timestamp: Date.now()
-                    }, { merge: true });
-                }
-            } else {
-                feedback.className = "text-center font-bold text-sm text-rose-400";
-                feedback.innerText = "إجابة خاطئة! حاول مجدداً في السؤال القادم.";
+                        if (window.activeAuthUser) {
+                            const studentName = localStorage.getItem('user_name_v4') || "مشارك";
+                            const scoreRef = doc(db, 'artifacts', appId, 'public', 'data', 'score_entry_v4_' + window.activeAuthUser.uid);
+                            await setDoc(scoreRef, {
+                                uid: window.activeAuthUser.uid,
+                                name: studentName,
+                                score: window.userPoints,
+                                timestamp: Date.now()
+                            }, { merge: true });
+                        }
+                    } else {
+                        feedback.className = "text-center font-bold text-sm text-rose-400";
+                        feedback.innerText = "إجابة خاطئة! انتظر السؤال القادم.";
+                    }
+
+                    const allBtns = document.getElementById('options-box').children;
+                    for (let b of allBtns) {
+                        b.onclick = null;
+                    }
+                    submitBtn.classList.add('hidden');
+                });
             }
-
-            const allBtns = document.getElementById('options-box').children;
-            for (let b of allBtns) {
-                b.onclick = null;
-            }
-            document.getElementById('submit-btn').classList.add('hidden');
-        }
+        });
 
         window.publishAdminQuestion = async function() {
             const qTxt = document.getElementById('admin-q-text').value.trim();
@@ -341,7 +345,7 @@
             const correctVal = document.getElementById('admin-correct-idx').value;
 
             if (!qTxt || !o0 || !o1) {
-                alert("برجاء إدخال السؤال والاختيارات الأساسية!");
+                alert("يرجى كتابة السؤال والاختيارات الأساسية أولاً!");
                 return;
             }
 
@@ -351,20 +355,20 @@
                 correct: Number(correctVal)
             };
 
-            const ref = doc(db, 'artifacts', appId, 'public', 'data', 'purple_neon_shared_question_v3');
+            const ref = doc(db, 'artifacts', appId, 'public', 'data', 'purple_neon_shared_question_v4');
             await setDoc(ref, payload);
-            alert("تم نشر السؤال بنجاح وسيتحدث فوراً لدى كل الطلاب!");
-        }
+            alert("تم نشر السؤال بنجاح وسيتحدث فوراً لدى كل من يفتح الرابط!");
+        };
 
         async function fetchLeaderboardData() {
             const tbody = document.getElementById('leaderboard-body');
-            tbody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-purple-300">جاري تحميل لوحة الشرف...</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-purple-300">جاري تحميل جدول المتصدرين...</td></tr>`;
 
             try {
                 const snapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data'));
                 let list = [];
                 snapshot.forEach((d) => {
-                    if (d.id.startsWith('score_entry_v3_')) {
+                    if (d.id.startsWith('score_entry_v4_')) {
                         list.push(d.data());
                     }
                 });
