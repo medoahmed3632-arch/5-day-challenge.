@@ -1,11 +1,12 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تحدي الـ 5 أيام</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
@@ -34,6 +35,7 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-purple-500 selection:text-white">
 
+    <!-- Header -->
     <header class="bg-[#121826] border-b border-purple-500/20 p-4 shadow-lg">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold text-purple-400 flex items-center gap-2 neon-purple-glow">
@@ -43,8 +45,10 @@
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="max-w-4xl mx-auto p-4 w-full flex-grow flex items-center justify-center">
         
+        <!-- Login Card -->
         <div id="card-login" class="bg-[#121826] p-8 rounded-3xl shadow-2xl max-w-md w-full space-y-6 neon-purple-box">
             <div class="text-center space-y-2">
                 <h2 class="text-2xl font-black text-white neon-purple-glow">تسجيل الدخول للتحدي</h2>
@@ -60,20 +64,23 @@
                     <label class="block text-xs font-bold text-purple-300 mb-1">البريد الإلكتروني (Gmail)</label>
                     <input type="email" id="login-email" class="w-full bg-[#0b0f19] border border-purple-500/30 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-500/50 transition" placeholder="name@gmail.com">
                 </div>
-                <button type="button" id="login-btn-action" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(147,51,234,0.5)] cursor-pointer">
+                <button type="button" onclick="performLogin()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(147,51,234,0.5)] cursor-pointer">
                     دخول التحدي الآن
                 </button>
             </div>
         </div>
 
+        <!-- Dashboard Section -->
         <div id="card-dashboard" class="hidden w-full space-y-6 my-auto">
             
+            <!-- Navigation Tabs -->
             <div class="flex gap-2 bg-[#121826] p-2 rounded-2xl border border-purple-500/30 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
                 <button type="button" onclick="switchTab('challenge')" id="tab-challenge" class="flex-1 py-2.5 rounded-xl font-bold bg-purple-600 text-white text-sm transition shadow-[0_0_10px_rgba(147,51,234,0.4)]">التحدي الحالي</button>
                 <button type="button" onclick="switchTab('leaderboard')" id="tab-leaderboard" class="flex-1 py-2.5 rounded-xl font-bold text-purple-300/70 hover:text-white text-sm transition">لوحة الشرف (Top 10)</button>
                 <button type="button" onclick="switchTab('admin')" id="tab-admin" class="hidden flex-1 py-2.5 rounded-xl font-bold text-rose-400 hover:text-rose-300 text-sm transition">لوحة الأدمن</button>
             </div>
 
+            <!-- Challenge Section -->
             <div id="view-challenge" class="bg-[#121826] p-6 sm:p-8 rounded-3xl shadow-2xl neon-purple-box space-y-6">
                 <div class="flex justify-between items-center border-b border-purple-500/20 pb-3">
                     <span class="text-xs font-bold text-purple-400">سؤال التحدي المباشر</span>
@@ -83,7 +90,8 @@
                 <div class="space-y-4">
                     <h3 id="question-label" class="text-lg font-bold text-white leading-relaxed">جاري تحميل السؤال...</h3>
                     <div id="options-box" class="space-y-3">
-                        </div>
+                        <!-- Options injected dynamically -->
+                    </div>
                 </div>
 
                 <button type="button" id="submit-btn" class="hidden w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(16,185,129,0.4)] cursor-pointer">
@@ -92,6 +100,7 @@
                 <div id="feedback-text" class="text-center font-bold text-sm"></div>
             </div>
 
+            <!-- Leaderboard Section -->
             <div id="view-leaderboard" class="hidden bg-[#121826] p-6 sm:p-8 rounded-3xl shadow-2xl neon-purple-box space-y-4">
                 <h3 class="text-lg font-bold text-purple-400 border-b border-purple-500/20 pb-3 flex items-center gap-2 neon-purple-glow">
                     <i class="fa-solid fa-medal"></i> أبطال الكلية (Top 10)
@@ -106,11 +115,13 @@
                             </tr>
                         </thead>
                         <tbody id="leaderboard-body" class="divide-y divide-purple-500/10 text-sm">
-                            </tbody>
+                            <!-- Rows injected -->
+                        </tbody>
                     </table>
                 </div>
             </div>
 
+            <!-- Admin Section -->
             <div id="view-admin" class="hidden bg-[#121826] p-6 sm:p-8 rounded-3xl shadow-2xl border-2 border-rose-500/50 space-y-4 shadow-[0_0_20px_rgba(244,63,94,0.3)]">
                 <h3 class="text-lg font-bold text-rose-400 border-b border-rose-500/20 pb-3 flex items-center gap-2">
                     <i class="fa-solid fa-gear"></i> لوحة تحكم الأدمن (التحكم بالأسئلة للكل)
@@ -135,7 +146,7 @@
                             <option value="3">الاختيار الرابع</option>
                         </select>
                     </div>
-                    <button type="button" id="admin-publish-btn" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(225,29,72,0.5)] cursor-pointer">
+                    <button type="button" onclick="publishAdminQuestion()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(225,29,72,0.5)] cursor-pointer">
                         حفظ ونشر السؤال لكل المشاركين فوراً
                     </button>
                 </div>
@@ -145,10 +156,12 @@
 
     </main>
 
+    <!-- Footer -->
     <footer class="text-center py-4 text-xs text-purple-400/60 border-t border-purple-500/10">
         تحدي الـ 5 أيام &copy; 2026
     </footer>
 
+    <!-- Firebase SDK & Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -165,7 +178,6 @@
         let currentSharedQuestion = null;
         let userPoints = 0;
 
-        // إيميل الأدمن الخاص بك
         const ADMIN_EMAIL = "medo@gmail.com";
 
         window.addEventListener('DOMContentLoaded', async () => {
@@ -182,23 +194,21 @@
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     activeAuthUser = user;
-                    const savedName = localStorage.getItem('user_name_v2');
-                    const savedEmail = localStorage.getItem('user_email_v2');
+                    const savedName = localStorage.getItem('user_name_v3');
+                    const savedEmail = localStorage.getItem('user_email_v3');
                     if (savedName && savedEmail) {
                         document.getElementById('login-name').value = savedName;
                         document.getElementById('login-email').value = savedEmail;
-                        startUserSession(savedName, savedEmail);
+                        activateDashboard(savedName, savedEmail);
                     }
                 }
             });
 
-            // ربط زر تسجيل الدخول بشكل مباشر وصحيح لمنع أي تعليق
-            document.getElementById('login-btn-action').addEventListener('click', handleLoginSubmit);
+            // ربط زر تأكيد الإجابة
             document.getElementById('submit-btn').addEventListener('click', submitAnswerAction);
-            document.getElementById('admin-publish-btn').addEventListener('click', publishAdminQuestion);
 
-            // استماع دائم ومباشر للأسئلة الموحدة لجميع المشاركين
-            const questionRef = doc(db, 'artifacts', appId, 'public', 'data', 'purple_neon_shared_question_v2');
+            // الاستماع اللحظي للأسئلة الموحدة
+            const questionRef = doc(db, 'artifacts', appId, 'public', 'data', 'purple_neon_shared_question_v3');
             onSnapshot(questionRef, (snap) => {
                 if (snap.exists()) {
                     currentSharedQuestion = snap.data();
@@ -214,21 +224,22 @@
             });
         });
 
-        function handleLoginSubmit() {
+        // دالة تسجيل الدخول المباشرة المرتبطة بزر HTML مباشرة
+        window.performLogin = function() {
             const name = document.getElementById('login-name').value.trim();
             const email = document.getElementById('login-email').value.trim();
 
             if (!name || !email) {
-                alert("يرجى ملء الاسم والبريد الإلكتروني!");
+                alert("يرجى ملء حقل الاسم والبريد الإلكتروني أولاً!");
                 return;
             }
 
-            localStorage.setItem('user_name_v2', name);
-            localStorage.setItem('user_email_v2', email);
-            startUserSession(name, email);
+            localStorage.setItem('user_name_v3', name);
+            localStorage.setItem('user_email_v3', email);
+            activateDashboard(name, email);
         }
 
-        function startUserSession(name, email) {
+        function activateDashboard(name, email) {
             document.getElementById('card-login').classList.add('hidden');
             document.getElementById('card-dashboard').classList.remove('hidden');
 
@@ -300,8 +311,8 @@
                 document.getElementById('score-counter').innerText = `نقاطك: ${userPoints}`;
 
                 if (activeAuthUser) {
-                    const studentName = localStorage.getItem('user_name_v2') || "طالب";
-                    const scoreRef = doc(db, 'artifacts', appId, 'public', 'data', 'score_entry_v2_' + activeAuthUser.uid);
+                    const studentName = localStorage.getItem('user_name_v3') || "طالب";
+                    const scoreRef = doc(db, 'artifacts', appId, 'public', 'data', 'score_entry_v3_' + activeAuthUser.uid);
                     await setDoc(scoreRef, {
                         uid: activeAuthUser.uid,
                         name: studentName,
@@ -321,7 +332,7 @@
             document.getElementById('submit-btn').classList.add('hidden');
         }
 
-        async function publishAdminQuestion() {
+        window.publishAdminQuestion = async function() {
             const qTxt = document.getElementById('admin-q-text').value.trim();
             const o0 = document.getElementById('admin-opt-0').value.trim();
             const o1 = document.getElementById('admin-opt-1').value.trim();
@@ -340,7 +351,7 @@
                 correct: Number(correctVal)
             };
 
-            const ref = doc(db, 'artifacts', appId, 'public', 'data', 'purple_neon_shared_question_v2');
+            const ref = doc(db, 'artifacts', appId, 'public', 'data', 'purple_neon_shared_question_v3');
             await setDoc(ref, payload);
             alert("تم نشر السؤال بنجاح وسيتحدث فوراً لدى كل الطلاب!");
         }
@@ -353,7 +364,7 @@
                 const snapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data'));
                 let list = [];
                 snapshot.forEach((d) => {
-                    if (d.id.startsWith('score_entry_v2_')) {
+                    if (d.id.startsWith('score_entry_v3_')) {
                         list.push(d.data());
                     }
                 });
@@ -384,4 +395,3 @@
     </script>
 </body>
 </html>
-```
