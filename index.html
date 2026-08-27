@@ -1,137 +1,156 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحدي الـ 5 أيام - 5 Day Challenge</title>
+    <title>تحدي الـ 5 أيام</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; }
+        body { font-family: 'Cairo', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
+
+        /* تأثير النيون الموف المتحرك على الأطراف */
+        @keyframes purpleNeonPulse {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(168, 85, 247, 0.4), inset 0 0 15px rgba(168, 85, 247, 0.2);
+                border-color: rgba(168, 85, 247, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(168, 85, 247, 0.8), inset 0 0 25px rgba(168, 85, 247, 0.4);
+                border-color: rgba(192, 132, 252, 1);
+            }
+        }
+
+        .neon-purple-box {
+            animation: purpleNeonPulse 3s infinite ease-in-out;
+            border: 2px solid rgba(168, 85, 247, 0.5);
+        }
+
+        .neon-purple-glow {
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.7);
+        }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between selection:bg-purple-500 selection:text-white">
 
     <!-- Header -->
-    <header class="bg-slate-800 border-b border-slate-700 p-4 shadow-md">
+    <header class="bg-[#121826] border-b border-purple-500/20 p-4 shadow-lg">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold text-amber-400 flex items-center gap-2">
-                <i class="fa-solid fa-trophy"></i> تحدي الـ 5 أيام
+            <h1 class="text-xl font-bold text-purple-400 flex items-center gap-2 neon-purple-glow">
+                <i class="fa-solid fa-bolt"></i> تحدي الـ 5 أيام
             </h1>
-            <div id="user-info" class="text-sm bg-slate-700 px-3 py-1 rounded-full text-slate-300">
-                جاري التحميل...
-            </div>
+            <div id="user-info-badge" class="hidden text-xs bg-purple-950/60 border border-purple-500/40 px-3 py-1.5 rounded-xl text-purple-200 font-semibold shadow-[0_0_10px_rgba(168,85,247,0.3)]"></div>
         </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="max-w-4xl mx-auto p-4 w-full flex-grow">
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto p-4 w-full flex-grow flex items-center justify-center">
         
-        <!-- Welcome / Login View -->
-        <div id="view-login" class="bg-slate-800 p-6 rounded-2xl shadow-xl max-w-md mx-auto mt-10 border border-slate-700">
-            <h2 class="text-2xl font-bold text-center mb-6 text-amber-400">تسجيل الدخول للتحدي</h2>
+        <!-- Login Card (Original Purple/Dark Theme) -->
+        <div id="card-login" class="bg-[#121826] p-8 rounded-3xl shadow-2xl max-w-md w-full space-y-6 neon-purple-box">
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl font-black text-white neon-purple-glow">تسجيل الدخول للتحدي</h2>
+                <p class="text-xs text-purple-300/80">سجل بياناتك للبدء والانضمام للوحة الشرف</p>
+            </div>
+
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm text-slate-400 mb-1">اسمك الثلاثي / المستعار</label>
-                    <input type="text" id="username-input" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-amber-400" placeholder="مثال: أحمد محمد">
+                    <label class="block text-xs font-bold text-purple-300 mb-1">الاسم الثلاثي</label>
+                    <input type="text" id="login-name" class="w-full bg-[#0b0f19] border border-purple-500/30 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-500/50 transition" placeholder="مثال: أحمد محمد">
                 </div>
-                <button onclick="registerUser()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 rounded-lg transition shadow-lg">
-                    ابدأ التحدي الآن <i class="fa-solid fa-arrow-left mr-2"></i>
+                <div>
+                    <label class="block text-xs font-bold text-purple-300 mb-1">البريد الإلكتروني (Gmail)</label>
+                    <input type="email" id="login-email" class="w-full bg-[#0b0f19] border border-purple-500/30 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-500/50 transition" placeholder="name@gmail.com">
+                </div>
+                <button onclick="handleLoginSubmit()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(147,51,234,0.5)]">
+                    دخول التحدي الآن
                 </button>
             </div>
         </div>
 
-        <!-- Dashboard View (Student & Admin) -->
-        <div id="view-dashboard" class="hidden space-y-6">
+        <!-- Dashboard Dashboard -->
+        <div id="card-dashboard" class="hidden w-full space-y-6 my-auto">
             
             <!-- Navigation Tabs -->
-            <div class="flex gap-2 bg-slate-800 p-2 rounded-xl border border-slate-700">
-                <button onclick="switchTab('challenge')" id="tab-challenge" class="flex-1 py-2 rounded-lg font-bold bg-amber-500 text-slate-950 transition">التحدي الحالي</button>
-                <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="flex-1 py-2 rounded-lg font-bold text-slate-300 hover:bg-slate-700 transition">لوحة الشرف (Top 10)</button>
-                <button onclick="switchTab('admin')" id="tab-admin" class="hidden flex-1 py-2 rounded-lg font-bold text-slate-300 hover:bg-slate-700 transition text-rose-400">لوحة الأدمن</button>
+            <div class="flex gap-2 bg-[#121826] p-2 rounded-2xl border border-purple-500/30 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                <button onclick="switchTab('challenge')" id="tab-challenge" class="flex-1 py-2.5 rounded-xl font-bold bg-purple-600 text-white text-sm transition shadow-[0_0_10px_rgba(147,51,234,0.4)]">التحدي الحالي</button>
+                <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="flex-1 py-2.5 rounded-xl font-bold text-purple-300/70 hover:text-white text-sm transition">لوحة الشرف (Top 10)</button>
+                <button onclick="switchTab('admin')" id="tab-admin" class="hidden flex-1 py-2.5 rounded-xl font-bold text-rose-400 hover:text-rose-300 text-sm transition">لوحة الأدمن</button>
             </div>
 
-            <!-- Challenge Tab Content -->
-            <div id="content-challenge" class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
-                <div id="question-container">
-                    <h3 class="text-xl font-bold text-slate-200 mb-4" id="q-title">جاري تحميل السؤال...</h3>
-                    <div id="options-container" class="space-y-3">
-                        <!-- Options injected by JS -->
-                    </div>
-                    <button onclick="submitAnswer()" class="mt-6 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-lg transition shadow-md hidden" id="submit-btn">
-                        تأكيد الإجابة
-                    </button>
-                    <div id="result-msg" class="mt-4 font-bold text-center"></div>
+            <!-- Challenge Section -->
+            <div id="view-challenge" class="bg-[#121826] p-6 sm:p-8 rounded-3xl shadow-2xl neon-purple-box space-y-6">
+                <div class="flex justify-between items-center border-b border-purple-500/20 pb-3">
+                    <span class="text-xs font-bold text-purple-400">سؤال التحدي المباشر</span>
+                    <span id="score-counter" class="text-xs font-bold text-emerald-400">نقاطك: 0</span>
                 </div>
+
+                <div class="space-y-4">
+                    <h3 id="question-label" class="text-lg font-bold text-white leading-relaxed">جاري تحميل السؤال...</h3>
+                    <div id="options-box" class="space-y-3">
+                        <!-- Options injected dynamically -->
+                    </div>
+                </div>
+
+                <button onclick="submitAnswerAction()" id="submit-btn" class="hidden w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+                    تأكيد الإجابة
+                </button>
+                <div id="feedback-text" class="text-center font-bold text-sm"></div>
             </div>
 
-            <!-- Leaderboard Tab Content -->
-            <div id="content-leaderboard" class="hidden bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
-                <h3 class="text-xl font-bold text-amber-400 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-medal"></i> أبطال التحدي (Top 10)
+            <!-- Leaderboard Section -->
+            <div id="view-leaderboard" class="hidden bg-[#121826] p-6 sm:p-8 rounded-3xl shadow-2xl neon-purple-box space-y-4">
+                <h3 class="text-lg font-bold text-purple-400 border-b border-purple-500/20 pb-3 flex items-center gap-2 neon-purple-glow">
+                    <i class="fa-solid fa-medal"></i> أبطال الكلية (Top 10)
                 </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right border-collapse">
                         <thead>
-                            <tr class="border-b border-slate-700 text-slate-400">
+                            <tr class="border-b border-purple-500/20 text-purple-300 text-xs">
                                 <th class="p-3">#</th>
                                 <th class="p-3">اسم المشارك</th>
                                 <th class="p-3">النقاط</th>
                             </tr>
                         </thead>
-                        <tbody id="leaderboard-list">
-                            <!-- Top 10 injected here -->
+                        <tbody id="leaderboard-body" class="divide-y divide-purple-500/10 text-sm">
+                            <!-- Rows injected -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Admin Tab Content -->
-            <div id="content-admin" class="hidden bg-slate-800 p-6 rounded-2xl border border-rose-500/30 shadow-xl space-y-4">
-                <h3 class="text-xl font-bold text-rose-400 mb-2"><i class="fa-solid fa-gear"></i> إعدادات الأسئلة (خاص بالأدمن)</h3>
-                <p class="text-sm text-slate-400">قم بتحديد السؤال والإجابات وسيتم تحديثها فوراً لكل الطلاب عند فتح الرابط!</p>
-                
-                <div>
-                    <label class="block text-sm text-slate-400 mb-1">نص السؤال</label>
-                    <textarea id="admin-q-text" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-rose-500" placeholder="اكتب السؤال هنا..."></textarea>
+            <!-- Admin Section -->
+            <div id="view-admin" class="hidden bg-[#121826] p-6 sm:p-8 rounded-3xl shadow-2xl border-2 border-rose-500/50 space-y-4 shadow-[0_0_20px_rgba(244,63,94,0.3)]">
+                <h3 class="text-lg font-bold text-rose-400 border-b border-rose-500/20 pb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-gear"></i> لوحة تحكم الأدمن (التحكم بالأسئلة للكل)
+                </h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs text-purple-300 mb-1">نص السؤال</label>
+                        <textarea id="admin-q-text" rows="2" class="w-full bg-[#0b0f19] border border-rose-500/30 rounded-xl p-3 text-white text-sm focus:outline-none focus:border-rose-400" placeholder="اكتب السؤال هنا..."></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <input type="text" id="admin-opt-0" placeholder="الاختيار الأول" class="bg-[#0b0f19] border border-purple-500/20 rounded-xl p-3 text-white text-sm">
+                        <input type="text" id="admin-opt-1" placeholder="الاختيار الثاني" class="bg-[#0b0f19] border border-purple-500/20 rounded-xl p-3 text-white text-sm">
+                        <input type="text" id="admin-opt-2" placeholder="الاختيار الثالث" class="bg-[#0b0f19] border border-purple-500/20 rounded-xl p-3 text-white text-sm">
+                        <input type="text" id="admin-opt-3" placeholder="الاختيار الرابع" class="bg-[#0b0f19] border border-purple-500/20 rounded-xl p-3 text-white text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-purple-300 mb-1">رقم الإجابة الصحيحة</label>
+                        <select id="admin-correct-idx" class="w-full bg-[#0b0f19] border border-purple-500/20 rounded-xl p-3 text-white text-sm">
+                            <option value="0">الاختيار الأول</option>
+                            <option value="1">الاختيار الثاني</option>
+                            <option value="2">الاختيار الثالث</option>
+                            <option value="3">الاختيار الرابع</option>
+                        </select>
+                    </div>
+                    <button onclick="publishAdminQuestion()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(225,29,72,0.5)]">
+                        حفظ ونشر السؤال لكل المشاركين فوراً
+                    </button>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-1">الاختيار الأول</label>
-                        <input type="text" id="admin-opt-0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-1">الاختيار الثاني</label>
-                        <input type="text" id="admin-opt-1" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-1">الاختيار الثالث</label>
-                        <input type="text" id="admin-opt-2" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-1">الاختيار الرابع</label>
-                        <input type="text" id="admin-opt-3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm text-slate-400 mb-1">رقم الإجابة الصحيحة (0 إلى 3)</label>
-                    <select id="admin-correct" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white">
-                        <option value="0">الاختيار الأول</option>
-                        <option value="1">الاختيار الثاني</option>
-                        <option value="2">الاختيار الثالث</option>
-                        <option value="3">الاختيار الرابع</option>
-                    </select>
-                </div>
-
-                <button onclick="saveAdminQuestion()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-lg transition shadow-lg">
-                    حفظ ونشر السؤال للجميع
-                </button>
             </div>
 
         </div>
@@ -139,29 +158,29 @@
     </main>
 
     <!-- Footer -->
-    <footer class="text-center py-4 text-xs text-slate-500 border-t border-slate-800">
-        جميع الحقوق محفوظة - تحدي الـ 5 أيام &copy; 2026
+    <footer class="text-center py-4 text-xs text-purple-400/60 border-t border-purple-500/10">
+        تحدي الـ 5 أيام &copy; 2026
     </footer>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDK & App Code -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global Firebase Configuration Setup
         const firebaseConfig = JSON.parse(__firebase_config);
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-challenge-app';
 
-        let currentUser = null;
-        let currentSelectedOption = null;
-        let activeQuestionData = null;
+        let activeAuthUser = null;
+        let selectedOptionIdx = null;
+        let currentSharedQuestion = null;
+        let userPoints = 0;
 
-        // Admin Secret Username (يمكنك تعديل اسم الأدمن هنا أو جعله ثابتاً)
-        const ADMIN_NAME = "Admin"; 
+        // إيميل الأدمن الخاص بك
+        const ADMIN_EMAIL = "medo@gmail.com";
 
         window.addEventListener('DOMContentLoaded', async () => {
             try {
@@ -176,209 +195,200 @@
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    currentUser = user;
-                    // Check if name saved in local storage for session
-                    const savedName = localStorage.getItem('challenge_username');
-                    if (savedName) {
-                        document.getElementById('username-input').value = savedName;
-                        registerUser(true);
-                    } else {
-                        document.getElementById('user-info').innerText = "يرجى تسجيل الاسم";
+                    activeAuthUser = user;
+                    const savedName = localStorage.getItem('user_name_v1');
+                    const savedEmail = localStorage.getItem('user_email_v1');
+                    if (savedName && savedEmail) {
+                        document.getElementById('login-name').value = savedName;
+                        document.getElementById('login-email').value = savedEmail;
+                        startUserSession(savedName, savedEmail);
                     }
                 }
             });
 
-            // Real-time listener for current challenge question
-            const qDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'current_question');
-            onSnapshot(qDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    activeQuestionData = docSnap.data();
-                    renderQuestion(activeQuestionData);
+            // مزامنة الأسئلة بالوقت الحقيقي لكل الطلاب
+            const questionRef = doc(db, 'artifacts', appId, 'public', 'data', 'purple_neon_shared_question');
+            onSnapshot(questionRef, (snap) => {
+                if (snap.exists()) {
+                    currentSharedQuestion = snap.data();
+                    renderQuestionUI(currentSharedQuestion);
                 } else {
-                    // Default Question if none set yet
-                    activeQuestionData = {
-                        question: "ما هو السؤال الأول في التحدي؟",
-                        options: ["اختيار أ", "اختيار ب", "اختيار ج", "اختيار د"],
+                    currentSharedQuestion = {
+                        question: "في انتظار الأدمن لتعيين السؤال الأول...",
+                        options: ["قريباً", "قريباً", "قريباً", "قريباً"],
                         correct: 0
                     };
-                    renderQuestion(activeQuestionData);
+                    renderQuestionUI(currentSharedQuestion);
                 }
-            }, (error) => {
-                console.error("Error reading question:", error);
             });
-
-            // Real-time listener for Leaderboard
-            loadLeaderboard();
         });
 
-        window.registerUser = async function(auto = false) {
-            const nameInput = document.getElementById('username-input').value.trim();
-            if (!nameInput) {
-                alert("برجاء إدخال اسمك أولاً!");
+        window.handleLoginSubmit = function() {
+            const name = document.getElementById('login-name').value.trim();
+            const email = document.getElementById('login-email').value.trim();
+
+            if (!name || !email) {
+                alert("يرجى ملء الاسم والبريد الإلكتروني!");
                 return;
             }
 
-            localStorage.setItem('challenge_username', nameInput);
-            document.getElementById('user-info').innerText = `المشارك: ${nameInput}`;
-            
-            // Switch views
-            document.getElementById('view-login').classList.add('hidden');
-            document.getElementById('view-dashboard').classList.remove('hidden');
+            localStorage.setItem('user_name_v1', name);
+            localStorage.setItem('user_email_v1', email);
+            startUserSession(name, email);
+        }
 
-            // Check if admin
-            if (nameInput.toLowerCase() === ADMIN_NAME.toLowerCase()) {
+        function startUserSession(name, email) {
+            document.getElementById('card-login').classList.add('hidden');
+            document.getElementById('card-dashboard').classList.remove('hidden');
+
+            const badge = document.getElementById('user-info-badge');
+            badge.innerText = name;
+            badge.classList.remove('hidden');
+
+            if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() || name.toLowerCase() === 'admin') {
                 document.getElementById('tab-admin').classList.remove('hidden');
-            }
-
-            // Save user profile in database
-            if (currentUser) {
-                const userRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data');
-                await setDoc(userRef, { name: nameInput, score: 0 }, { merge: true });
             }
         }
 
         window.switchTab = function(tabName) {
-            document.getElementById('content-challenge').classList.add('hidden');
-            document.getElementById('content-leaderboard').classList.add('hidden');
-            document.getElementById('content-admin').classList.add('hidden');
+            document.getElementById('view-challenge').classList.add('hidden');
+            document.getElementById('view-leaderboard').classList.add('hidden');
+            document.getElementById('view-admin').classList.add('hidden');
 
-            document.getElementById('tab-challenge').className = "flex-1 py-2 rounded-lg font-bold text-slate-300 hover:bg-slate-700 transition";
-            document.getElementById('tab-leaderboard').className = "flex-1 py-2 rounded-lg font-bold text-slate-300 hover:bg-slate-700 transition";
-            const adminTab = document.getElementById('tab-admin');
-            if (adminTab) adminTab.className = "flex-1 py-2 rounded-lg font-bold text-slate-300 hover:bg-slate-700 transition text-rose-400";
+            document.getElementById('tab-challenge').className = "flex-1 py-2.5 rounded-xl font-bold text-purple-300/70 hover:text-white text-sm transition";
+            document.getElementById('tab-leaderboard').className = "flex-1 py-2.5 rounded-xl font-bold text-purple-300/70 hover:text-white text-sm transition";
+            const tabAdmin = document.getElementById('tab-admin');
+            if (tabAdmin) tabAdmin.className = "flex-1 py-2.5 rounded-xl font-bold text-rose-400 hover:text-rose-300 text-sm transition";
 
-            document.getElementById(`content-${tabName}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabName}`).className = "flex-1 py-2 rounded-lg font-bold bg-amber-500 text-slate-950 transition";
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).className = "flex-1 py-2.5 rounded-xl font-bold bg-purple-600 text-white text-sm transition shadow-[0_0_10px_rgba(147,51,234,0.4)]";
 
             if (tabName === 'leaderboard') {
-                loadLeaderboard();
+                fetchLeaderboardData();
             }
         }
 
-        function renderQuestion(qData) {
-            document.getElementById('q-title').innerText = qData.question;
-            const optsContainer = document.getElementById('options-container');
-            optsContainer.innerHTML = '';
-            currentSelectedOption = null;
+        function renderQuestionUI(qData) {
+            document.getElementById('question-label').innerText = qData.question;
+            const box = document.getElementById('options-box');
+            box.innerHTML = '';
+            selectedOptionIdx = null;
             document.getElementById('submit-btn').classList.add('hidden');
-            document.getElementById('result-msg').innerText = '';
+            document.getElementById('feedback-text').innerText = '';
 
-            qData.options.forEach((opt, index) => {
+            qData.options.forEach((optText, idx) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-right p-3 bg-slate-900 border border-slate-700 rounded-xl hover:border-amber-400 transition text-slate-200";
-                btn.innerText = opt;
-                btn.onclick = () => selectOption(index, btn);
-                optsContainer.appendChild(btn);
+                btn.className = "w-full text-right p-3.5 bg-[#0b0f19] border border-purple-500/20 rounded-xl hover:border-purple-400 text-purple-100 text-sm transition font-semibold hover:shadow-[0_0_10px_rgba(168,85,247,0.3)]";
+                btn.innerText = optText;
+                btn.onclick = () => selectOptionItem(idx, btn);
+                box.appendChild(btn);
             });
         }
 
-        function selectOption(index, btnElement) {
-            const buttons = document.getElementById('options-container').children;
-            for (let b of buttons) {
-                b.classList.remove('bg-amber-500/20', 'border-amber-400', 'text-amber-400');
+        function selectOptionItem(idx, btnEl) {
+            const allBtns = document.getElementById('options-box').children;
+            for (let b of allBtns) {
+                b.classList.remove('bg-purple-600/20', 'border-purple-400', 'text-purple-300', 'shadow-[0_0_15px_rgba(168,85,247,0.4)]');
             }
-            btnElement.classList.add('bg-amber-500/20', 'border-amber-400', 'text-amber-400');
-            currentSelectedOption = index;
+            btnEl.classList.add('bg-purple-600/20', 'border-purple-400', 'text-purple-300', 'shadow-[0_0_15px_rgba(168,85,247,0.4)]');
+            selectedOptionIdx = idx;
             document.getElementById('submit-btn').classList.remove('hidden');
         }
 
-        window.submitAnswer = async function() {
-            if (currentSelectedOption === null || !activeQuestionData) return;
+        window.submitAnswerAction = async function() {
+            if (selectedOptionIdx === null || !currentSharedQuestion) return;
 
-            const isCorrect = currentSelectedOption === Number(activeQuestionData.correct);
-            const msgEl = document.getElementById('result-msg');
-            
+            const isCorrect = selectedOptionIdx === Number(currentSharedQuestion.correct);
+            const feedback = document.getElementById('feedback-text');
+
             if (isCorrect) {
-                msgEl.className = "mt-4 font-bold text-center text-emerald-400";
-                msgEl.innerText = "إجابة صحيحة! لقد ربحت 10 نقاط 🏆";
+                feedback.className = "text-center font-bold text-sm text-emerald-400";
+                feedback.innerText = "إجابة صحيحة! تمت إضافة 10 نقاط لرصيدك 🏆";
+                userPoints += 10;
+                document.getElementById('score-counter').innerText = `نقاطك: ${userPoints}`;
 
-                // Update Score in Firestore
-                if (currentUser) {
-                    const name = localStorage.getItem('challenge_username') || "مشارك";
-                    const scoreRef = doc(db, 'artifacts', appId, 'public', 'data', 'scores_' + currentUser.uid);
+                if (activeAuthUser) {
+                    const studentName = localStorage.getItem('user_name_v1') || "طالب";
+                    const scoreRef = doc(db, 'artifacts', appId, 'public', 'data', 'score_entry_' + activeAuthUser.uid);
                     await setDoc(scoreRef, {
-                        uid: currentUser.uid,
-                        name: name,
-                        score: 10, // يمكن تراكمها لاحقاً
+                        uid: activeAuthUser.uid,
+                        name: studentName,
+                        score: userPoints,
                         timestamp: Date.now()
                     }, { merge: true });
                 }
             } else {
-                msgEl.className = "mt-4 font-bold text-center text-rose-400";
-                msgEl.innerText = "إجابة خاطئة! حاول مرة أخرى في السؤال القادم.";
+                feedback.className = "text-center font-bold text-sm text-rose-400";
+                feedback.innerText = "إجابة خاطئة! حاول مجدداً في السؤال القادم.";
             }
 
-            // Disable buttons after answer
-            const buttons = document.getElementById('options-container').children;
-            for (let b of buttons) {
+            const allBtns = document.getElementById('options-box').children;
+            for (let b of allBtns) {
                 b.onclick = null;
             }
             document.getElementById('submit-btn').classList.add('hidden');
         }
 
-        window.saveAdminQuestion = async function() {
-            const qText = document.getElementById('admin-q-text').value.trim();
-            const opt0 = document.getElementById('admin-opt-0').value.trim();
-            const opt1 = document.getElementById('admin-opt-1').value.trim();
-            const opt2 = document.getElementById('admin-opt-2').value.trim();
-            const opt3 = document.getElementById('admin-opt-3').value.trim();
-            const correct = document.getElementById('admin-correct').value;
+        window.publishAdminQuestion = async function() {
+            const qTxt = document.getElementById('admin-q-text').value.trim();
+            const o0 = document.getElementById('admin-opt-0').value.trim();
+            const o1 = document.getElementById('admin-opt-1').value.trim();
+            const o2 = document.getElementById('admin-opt-2').value.trim();
+            const o3 = document.getElementById('admin-opt-3').value.trim();
+            const correctVal = document.getElementById('admin-correct-idx').value;
 
-            if (!qText || !opt0 || !opt1) {
-                alert("برجاء كتابة السؤال واختيار الإجابات الأساسية على الأقل!");
+            if (!qTxt || !o0 || !o1) {
+                alert("برجاء إدخال السؤال والاختيارات الأساسية!");
                 return;
             }
 
-            const qData = {
-                question: qText,
-                options: [opt0, opt1, opt2, opt3].filter(o => o !== ""),
-                correct: Number(correct)
+            const payload = {
+                question: qTxt,
+                options: [o0, o1, o2, o3].filter(o => o !== ""),
+                correct: Number(correctVal)
             };
 
-            const qDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'current_question');
-            await setDoc(qDocRef, qData);
-            alert("تم حفظ ونشر السؤال بنجاح لكل المشاركين!");
+            const ref = doc(db, 'artifacts', appId, 'public', 'data', 'purple_neon_shared_question');
+            await setDoc(ref, payload);
+            alert("تم نشر السؤال بنجاح وسيتحدث فوراً لدى كل الطلاب!");
         }
 
-        async function loadLeaderboard() {
-            const lbList = document.getElementById('leaderboard-list');
-            lbList.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-slate-400">جاري تحميل لوحة الشرف...</td></tr>`;
+        async function fetchLeaderboardData() {
+            const tbody = document.getElementById('leaderboard-body');
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-purple-300">جاري تحميل لوحة الشرف...</td></tr>`;
 
             try {
-                const q = query(collection(db, 'artifacts', appId, 'public', 'data'));
-                const querySnapshot = await getDocs(q);
-                let scores = [];
-                querySnapshot.forEach((docSnap) => {
-                    if (docSnap.id.startsWith('scores_')) {
-                        scores.push(docSnap.data());
+                const snapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data'));
+                let list = [];
+                snapshot.forEach((d) => {
+                    if (d.id.startsWith('score_entry_')) {
+                        list.push(d.data());
                     }
                 });
 
-                // Sort by score descending
-                scores.sort((a, b) => b.score - a.score);
+                list.sort((a, b) => b.score - a.score);
 
-                lbList.innerHTML = '';
-                if (scores.length === 0) {
-                    lbList.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-slate-400">لا يوجد متصدرين حتى الآن. ابدأ بالحل!</td></tr>`;
+                tbody.innerHTML = '';
+                if (list.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-purple-300">لا يوجد متصدرين بعد. ابدأ الحل الآن!</td></tr>`;
                     return;
                 }
 
-                scores.slice(0, 10).forEach((item, index) => {
+                list.slice(0, 10).forEach((item, index) => {
                     const row = document.createElement('tr');
-                    row.className = "border-b border-slate-700/50 hover:bg-slate-700/20";
+                    row.className = "hover:bg-purple-900/10 transition";
                     row.innerHTML = `
-                        <td class="p-3 font-bold text-amber-400">${index + 1}</td>
-                        <td class="p-3">${item.name}</td>
-                        <td class="p-3 font-semibold text-emerald-400">${item.score} نقطة</td>
+                        <td class="p-3 font-bold text-purple-400">#${index + 1}</td>
+                        <td class="p-3 font-semibold text-white">${item.name}</td>
+                        <td class="p-3 font-bold text-emerald-400">${item.score} نقطة</td>
                     `;
-                    lbList.lbList ? '' : lbList.appendChild(row);
+                    tbody.appendChild(row);
                 });
-            } catch (err) {
-                console.error("Error loading leaderboard:", err);
-                lbList.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-rose-400">حدث خطأ في تحميل لوحة الشرف</td></tr>`;
+            } catch (e) {
+                console.error("Leaderboard error:", e);
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-rose-400">حدث خطأ أثناء تحميل لوحة الشرف</td></tr>`;
             }
         }
     </script>
 </body>
 </html>
-```
