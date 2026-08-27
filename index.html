@@ -1,398 +1,384 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The 5-Day Challenge</title>
+    <title>تحدي الـ 5 أيام - 5 Day Challenge</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
         body { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
 
-    <!-- شاشة تسجيل الدخول -->
-    <div id="auth-screen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-8 shadow-2xl space-y-6">
-            <div class="text-center space-y-2">
-                <div class="bg-indigo-600 text-white w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-2xl shadow-lg">
-                    <i class="fa-solid fa-trophy"></i>
-                </div>
-                <h2 class="text-2xl font-black text-white">The 5-Day Challenge</h2>
-                <p class="text-xs text-slate-400">سجل حسابك وابدأ بتجميع النقاط والمنافسة!</p>
-            </div>
-            
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">اسمك الكامل:</label>
-                    <input type="text" id="auth-name" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="اكتب اسمك هنا...">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">البريد الإلكتروني (لحفظ نقاطك):</label>
-                    <input type="email" id="auth-email" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="name@example.com">
-                </div>
-                <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white p-3.5 rounded-xl font-bold shadow-lg transition text-sm">
-                    دخول التحدي 🚀
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- الهيدر -->
-    <header class="bg-slate-800/80 backdrop-blur border-b border-slate-700 p-4 sticky top-0 z-30">
+    <!-- Header -->
+    <header class="bg-slate-800 border-b border-slate-700 p-4 shadow-md">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-md">
-                    <i class="fa-solid fa-trophy text-lg"></i>
-                </div>
-                <div>
-                    <h1 class="text-lg font-bold text-white">5-Day Challenge</h1>
-                    <p class="text-xs text-indigo-400" id="current-user-display">مرحباً بك</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="bg-slate-700/60 px-3 py-1.5 rounded-lg border border-slate-600 text-sm">
-                    <span class="text-indigo-300 font-bold" id="header-score">0</span> نقطة
-                </div>
-                <button onclick="requestAdminAccess()" class="bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
-                    <i class="fa-solid fa-gears"></i> لوحة الأدمن
-                </button>
+            <h1 class="text-xl font-bold text-amber-400 flex items-center gap-2">
+                <i class="fa-solid fa-trophy"></i> تحدي الـ 5 أيام
+            </h1>
+            <div id="user-info" class="text-sm bg-slate-700 px-3 py-1 rounded-full text-slate-300">
+                جاري التحميل...
             </div>
         </div>
     </header>
 
-    <!-- المحتوى الرئيسي -->
-    <main class="flex-1 max-w-4xl w-full mx-auto p-4 space-y-6">
-        <section class="bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 p-6 rounded-2xl border border-indigo-500/30 shadow-xl">
-            <h2 class="text-xl font-black mb-1 text-white">أيام التحدي</h2>
-            <p class="text-slate-400 text-xs mb-4">اختر اليوم لعرض التحدي الخاص به والإجابة:</p>
-            <div class="grid grid-cols-5 gap-2" id="days-tabs"></div>
-        </section>
+    <!-- Main Content Container -->
+    <main class="max-w-4xl mx-auto p-4 w-full flex-grow">
+        
+        <!-- Welcome / Login View -->
+        <div id="view-login" class="bg-slate-800 p-6 rounded-2xl shadow-xl max-w-md mx-auto mt-10 border border-slate-700">
+            <h2 class="text-2xl font-bold text-center mb-6 text-amber-400">تسجيل الدخول للتحدي</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">اسمك الثلاثي / المستعار</label>
+                    <input type="text" id="username-input" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-amber-400" placeholder="مثال: أحمد محمد">
+                </div>
+                <button onclick="registerUser()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 rounded-lg transition shadow-lg">
+                    ابدأ التحدي الآن <i class="fa-solid fa-arrow-left mr-2"></i>
+                </button>
+            </div>
+        </div>
 
-        <!-- كارد عرض السؤال والاختيارات -->
-        <section class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl" id="challenge-card-container"></section>
+        <!-- Dashboard View (Student & Admin) -->
+        <div id="view-dashboard" class="hidden space-y-6">
+            
+            <!-- Navigation Tabs -->
+            <div class="flex gap-2 bg-slate-800 p-2 rounded-xl border border-slate-700">
+                <button onclick="switchTab('challenge')" id="tab-challenge" class="flex-1 py-2 rounded-lg font-bold bg-amber-500 text-slate-950 transition">التحدي الحالي</button>
+                <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="flex-1 py-2 rounded-lg font-bold text-slate-300 hover:bg-slate-700 transition">لوحة الشرف (Top 10)</button>
+                <button onclick="switchTab('admin')" id="tab-admin" class="hidden flex-1 py-2 rounded-lg font-bold text-slate-300 hover:bg-slate-700 transition text-rose-400">لوحة الأدمن</button>
+            </div>
 
-        <!-- لوحة الصدارة (Top Participants) -->
-        <section class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-md font-bold flex items-center gap-2 text-white">
-                    <i class="fa-solid fa-medal text-amber-400"></i> لوحة الصدارة (Top Participants)
+            <!-- Challenge Tab Content -->
+            <div id="content-challenge" class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+                <div id="question-container">
+                    <h3 class="text-xl font-bold text-slate-200 mb-4" id="q-title">جاري تحميل السؤال...</h3>
+                    <div id="options-container" class="space-y-3">
+                        <!-- Options injected by JS -->
+                    </div>
+                    <button onclick="submitAnswer()" class="mt-6 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-lg transition shadow-md hidden" id="submit-btn">
+                        تأكيد الإجابة
+                    </button>
+                    <div id="result-msg" class="mt-4 font-bold text-center"></div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Tab Content -->
+            <div id="content-leaderboard" class="hidden bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+                <h3 class="text-xl font-bold text-amber-400 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-medal"></i> أبطال التحدي (Top 10)
                 </h3>
-                <span class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-slate-300">محدث سحابياً فورياً</span>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-700 text-slate-400">
+                                <th class="p-3">#</th>
+                                <th class="p-3">اسم المشارك</th>
+                                <th class="p-3">النقاط</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-list">
+                            <!-- Top 10 injected here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="divide-y divide-slate-700" id="leaderboard-list">
-                <p class="text-xs text-slate-400 text-center py-2">جاري جلب لوحة الصدارة...</p>
-            </div>
-        </section>
-    </main>
 
-    <!-- لوحة التحكم (الأدمن - نظام الاختيارات MCQ) -->
-    <div id="admin-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-pen-nib text-amber-400"></i> لوحة التحكم (اختيار من متعدد)</h3>
-                <button onclick="closeModal('admin-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">اختر اليوم للتعديل:</label>
-                    <select id="admin-day-select" onchange="loadAdminDayData()" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white">
-                        <option value="1">اليوم الأول</option>
-                        <option value="2">اليوم الثاني</option>
-                        <option value="3">اليوم الثالث</option>
-                        <option value="4">اليوم الرابع</option>
-                        <option value="5">اليوم الخامس</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">عنوان التحدي:</label>
-                    <input type="text" id="admin-title" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white" placeholder="مثال: تحدي الكلينيكال">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">نص السؤال:</label>
-                    <textarea id="admin-desc" rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white" placeholder="اكتب نص السؤال هنا..."></textarea>
-                </div>
+            <!-- Admin Tab Content -->
+            <div id="content-admin" class="hidden bg-slate-800 p-6 rounded-2xl border border-rose-500/30 shadow-xl space-y-4">
+                <h3 class="text-xl font-bold text-rose-400 mb-2"><i class="fa-solid fa-gear"></i> إعدادات الأسئلة (خاص بالأدمن)</h3>
+                <p class="text-sm text-slate-400">قم بتحديد السؤال والإجابات وسيتم تحديثها فوراً لكل الطلاب عند فتح الرابط!</p>
                 
-                <div class="space-y-2 pt-2 border-t border-slate-800">
-                    <label class="block text-xs font-bold text-amber-400">خيارات الإجابة (MCQ):</label>
-                    <input type="text" id="admin-opt-0" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-sm text-white" placeholder="الاختيار الأول">
-                    <input type="text" id="admin-opt-1" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-sm text-white" placeholder="الاختيار الثاني">
-                    <input type="text" id="admin-opt-2" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-sm text-white" placeholder="الاختيار الثالث">
-                    <input type="text" id="admin-opt-3" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-sm text-white" placeholder="الاختيار الرابع">
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">نص السؤال</label>
+                    <textarea id="admin-q-text" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-rose-500" placeholder="اكتب السؤال هنا..."></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">الاختيار الأول</label>
+                        <input type="text" id="admin-opt-0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">الاختيار الثاني</label>
+                        <input type="text" id="admin-opt-1" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">الاختيار الثالث</label>
+                        <input type="text" id="admin-opt-2" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">الاختيار الرابع</label>
+                        <input type="text" id="admin-opt-3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+                    </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-amber-400 mb-1">⭐ حدد الإجابة الصحيحة:</label>
-                    <select id="admin-correct-idx" class="w-full bg-slate-800 border border-amber-500 rounded-xl p-2.5 text-sm text-white">
+                    <label class="block text-sm text-slate-400 mb-1">رقم الإجابة الصحيحة (0 إلى 3)</label>
+                    <select id="admin-correct" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white">
                         <option value="0">الاختيار الأول</option>
                         <option value="1">الاختيار الثاني</option>
                         <option value="2">الاختيار الثالث</option>
                         <option value="3">الاختيار الرابع</option>
                     </select>
                 </div>
+
+                <button onclick="saveAdminQuestion()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-lg transition shadow-lg">
+                    حفظ ونشر السؤال للجميع
+                </button>
             </div>
-            <div class="flex justify-end gap-2 pt-2">
-                <button onclick="closeModal('admin-modal')" class="px-4 py-2 bg-slate-800 rounded-xl text-xs font-semibold">إلغاء</button>
-                <button onclick="saveAdminChanges()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 rounded-xl text-xs font-bold text-white shadow">حفظ التعديلات</button>
-            </div>
+
         </div>
-    </div>
 
-    <!-- رسالة التنبيه -->
-    <div id="toast" class="fixed bottom-5 left-5 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-xl hidden text-xs font-bold z-50 flex items-center gap-2">
-        <i class="fa-solid fa-circle-check"></i> <span id="toast-text">تم بنجاح</span>
-    </div>
+    </main>
 
-    <!-- الجافاسكريبت والربط السحابي -->
+    <!-- Footer -->
+    <footer class="text-center py-4 text-xs text-slate-500 border-t border-slate-800">
+        جميع الحقوق محفوظة - تحدي الـ 5 أيام &copy; 2026
+    </footer>
+
+    <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBMxfI1fHY0nXbkrX3Vl9a1Zq_h-85mS8Y",
-            authDomain: "challenge5days.firebaseapp.com",
-            projectId: "challenge5days",
-            storageBucket: "challenge5days.appspot.com",
-            messagingSenderId: "404505595178",
-            appId: "1:404505595178:web:8d514856f4d3663b655f01"
-        };
-
+        // Global Firebase Configuration Setup
+        const firebaseConfig = JSON.parse(__firebase_config);
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-challenge-app';
 
-        let currentUser = JSON.parse(localStorage.getItem('current_user_v7')) || null;
-        let currentDay = 1;
-        const ADMIN_SECRET = "1234";
+        let currentUser = null;
+        let currentSelectedOption = null;
+        let activeQuestionData = null;
 
-        let challenges = JSON.parse(localStorage.getItem('challenges_data_v7')) || {
-            1: { title: "تحدي اليوم الأول", desc: "أدخل السؤال من لوحة الأدمن...", opts: ["خيار أ", "خيار ب", "خيار ج", "خيار د"], correct: 0 },
-            2: { title: "تحدي اليوم الثاني", desc: "أدخل السؤال من لوحة الأدمن...", opts: ["خيار أ", "خيار ب", "خيار ج", "خيار د"], correct: 0 },
-            3: { title: "تحدي اليوم الثالث", desc: "أدخل السؤال من لوحة الأدمن...", opts: ["خيار أ", "خيار ب", "خيار ج", "خيار د"], correct: 0 },
-            4: { title: "تحدي اليوم الرابع", desc: "أدخل السؤال من لوحة الأدمن...", opts: ["خيار أ", "خيار ب", "خيار ج", "خيار د"], correct: 0 },
-            5: { title: "تحدي اليوم الخامس", desc: "أدخل السؤال من لوحة الأدمن...", opts: ["خيار أ", "خيار ب", "خيار ج", "خيار د"], correct: 0 }
-        };
+        // Admin Secret Username (يمكنك تعديل اسم الأدمن هنا أو جعله ثابتاً)
+        const ADMIN_NAME = "Admin"; 
 
-        window.handleLogin = async function() {
-            const name = document.getElementById('auth-name').value.trim();
-            const email = document.getElementById('auth-email').value.trim().toLowerCase();
-            if(!name || !email) {
-                alert("الرجاء إدخال الاسم والبريد الإلكتروني!");
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Auth error:", err);
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    // Check if name saved in local storage for session
+                    const savedName = localStorage.getItem('challenge_username');
+                    if (savedName) {
+                        document.getElementById('username-input').value = savedName;
+                        registerUser(true);
+                    } else {
+                        document.getElementById('user-info').innerText = "يرجى تسجيل الاسم";
+                    }
+                }
+            });
+
+            // Real-time listener for current challenge question
+            const qDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'current_question');
+            onSnapshot(qDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    activeQuestionData = docSnap.data();
+                    renderQuestion(activeQuestionData);
+                } else {
+                    // Default Question if none set yet
+                    activeQuestionData = {
+                        question: "ما هو السؤال الأول في التحدي؟",
+                        options: ["اختيار أ", "اختيار ب", "اختيار ج", "اختيار د"],
+                        correct: 0
+                    };
+                    renderQuestion(activeQuestionData);
+                }
+            }, (error) => {
+                console.error("Error reading question:", error);
+            });
+
+            // Real-time listener for Leaderboard
+            loadLeaderboard();
+        });
+
+        window.registerUser = async function(auto = false) {
+            const nameInput = document.getElementById('username-input').value.trim();
+            if (!nameInput) {
+                alert("برجاء إدخال اسمك أولاً!");
                 return;
             }
-            currentUser = { name: name, email: email };
-            localStorage.setItem('current_user_v7', JSON.stringify(currentUser));
+
+            localStorage.setItem('challenge_username', nameInput);
+            document.getElementById('user-info').innerText = `المشارك: ${nameInput}`;
             
-            try {
-                const userRef = doc(db, "users", email);
-                const userSnap = await getDoc(userRef);
-                if(!userSnap.exists()) {
-                    await setDoc(userRef, { name: name, email: email, score: 0, solvedDays: [] });
-                } else {
-                    await setDoc(userRef, { name: name }, { merge: true });
-                }
-            } catch(e) {
-                console.log("خطأ في الاتصال", e);
+            // Switch views
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-dashboard').classList.remove('hidden');
+
+            // Check if admin
+            if (nameInput.toLowerCase() === ADMIN_NAME.toLowerCase()) {
+                document.getElementById('tab-admin').classList.remove('hidden');
             }
 
-            location.reload();
-        };
-
-        async function initApp() {
-            if(currentUser) {
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('current-user-display').innerText = `مرحباً، ${currentUser.name}`;
-                await updateScoreHeader();
-                renderDaysTabs();
-                renderChallengeCard();
-                renderLeaderboard();
+            // Save user profile in database
+            if (currentUser) {
+                const userRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data');
+                await setDoc(userRef, { name: nameInput, score: 0 }, { merge: true });
             }
         }
 
-        window.switchDay = function(day) {
-            currentDay = day;
-            renderDaysTabs();
-            renderChallengeCard();
-        };
+        window.switchTab = function(tabName) {
+            document.getElementById('content-challenge').classList.add('hidden');
+            document.getElementById('content-leaderboard').classList.add('hidden');
+            document.getElementById('content-admin').classList.add('hidden');
 
-        function renderDaysTabs() {
-            const container = document.getElementById('days-tabs');
-            container.innerHTML = '';
-            for(let i=1; i<=5; i++) {
-                const active = currentDay === i;
-                container.innerHTML += `
-                    <button onclick="switchDay(${i})" class="p-2.5 rounded-xl text-center font-bold text-xs transition border ${active ? 'bg-indigo-600 border-indigo-400 text-white shadow-lg' : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800'}">
-                        <div>اليوم</div>
-                        <div class="text-base">${i}</div>
-                    </button>
-                `;
+            document.getElementById('tab-challenge').className = "flex-1 py-2 rounded-lg font-bold text-slate-300 hover:bg-slate-700 transition";
+            document.getElementById('tab-leaderboard').className = "flex-1 py-2 rounded-lg font-bold text-slate-300 hover:bg-slate-700 transition";
+            const adminTab = document.getElementById('tab-admin');
+            if (adminTab) adminTab.className = "flex-1 py-2 rounded-lg font-bold text-slate-300 hover:bg-slate-700 transition text-rose-400";
+
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).className = "flex-1 py-2 rounded-lg font-bold bg-amber-500 text-slate-950 transition";
+
+            if (tabName === 'leaderboard') {
+                loadLeaderboard();
             }
         }
 
-        function renderChallengeCard() {
-            const ch = challenges[currentDay];
-            const container = document.getElementById('challenge-card-container');
+        function renderQuestion(qData) {
+            document.getElementById('q-title').innerText = qData.question;
+            const optsContainer = document.getElementById('options-container');
+            optsContainer.innerHTML = '';
+            currentSelectedOption = null;
+            document.getElementById('submit-btn').classList.add('hidden');
+            document.getElementById('result-msg').innerText = '';
+
+            qData.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-right p-3 bg-slate-900 border border-slate-700 rounded-xl hover:border-amber-400 transition text-slate-200";
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(index, btn);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(index, btnElement) {
+            const buttons = document.getElementById('options-container').children;
+            for (let b of buttons) {
+                b.classList.remove('bg-amber-500/20', 'border-amber-400', 'text-amber-400');
+            }
+            btnElement.classList.add('bg-amber-500/20', 'border-amber-400', 'text-amber-400');
+            currentSelectedOption = index;
+            document.getElementById('submit-btn').classList.remove('hidden');
+        }
+
+        window.submitAnswer = async function() {
+            if (currentSelectedOption === null || !activeQuestionData) return;
+
+            const isCorrect = currentSelectedOption === Number(activeQuestionData.correct);
+            const msgEl = document.getElementById('result-msg');
             
-            let optsHtml = '';
-            if(ch.opts && ch.opts.length > 0) {
-                ch.opts.forEach((opt, idx) => {
-                    optsHtml += `
-                        <button onclick="submitAnswer(${idx})" class="w-full text-right bg-slate-700/50 hover:bg-indigo-600 border border-slate-600/60 p-3.5 rounded-xl text-sm font-semibold transition flex items-center justify-between group">
-                            <span>${opt}</span>
-                            <span class="w-6 h-6 rounded-lg bg-slate-800 group-hover:bg-indigo-700 flex items-center justify-center text-xs text-slate-300 font-bold">${String.fromCharCode(65 + idx)}</span>
-                        </button>
-                    `;
-                });
+            if (isCorrect) {
+                msgEl.className = "mt-4 font-bold text-center text-emerald-400";
+                msgEl.innerText = "إجابة صحيحة! لقد ربحت 10 نقاط 🏆";
+
+                // Update Score in Firestore
+                if (currentUser) {
+                    const name = localStorage.getItem('challenge_username') || "مشارك";
+                    const scoreRef = doc(db, 'artifacts', appId, 'public', 'data', 'scores_' + currentUser.uid);
+                    await setDoc(scoreRef, {
+                        uid: currentUser.uid,
+                        name: name,
+                        score: 10, // يمكن تراكمها لاحقاً
+                        timestamp: Date.now()
+                    }, { merge: true });
+                }
+            } else {
+                msgEl.className = "mt-4 font-bold text-center text-rose-400";
+                msgEl.innerText = "إجابة خاطئة! حاول مرة أخرى في السؤال القادم.";
             }
 
-            container.innerHTML = `
-                <div class="mb-4">
-                    <h3 class="text-lg font-bold text-white mb-2">${ch.title}</h3>
-                    <p class="text-slate-300 text-xs leading-relaxed bg-slate-900/60 p-3.5 rounded-xl border border-slate-700/50">${ch.desc}</p>
-                </div>
-                <div class="space-y-2.5 pt-2 border-t border-slate-700/50">
-                    <p class="text-xs font-bold text-indigo-300 mb-2">اختر الإجابة الصحيحة:</p>
-                    ${optsHtml}
-                </div>
-            `;
+            // Disable buttons after answer
+            const buttons = document.getElementById('options-container').children;
+            for (let b of buttons) {
+                b.onclick = null;
+            }
+            document.getElementById('submit-btn').classList.add('hidden');
         }
 
-        window.submitAnswer = async function(chosenIdx) {
-            const ch = challenges[currentDay];
-            
-            try {
-                const userRef = doc(db, "users", currentUser.email);
-                const userSnap = await getDoc(userRef);
-                let userData = userSnap.data() || { name: currentUser.name, email: currentUser.email, score: 0, solvedDays: [] };
+        window.saveAdminQuestion = async function() {
+            const qText = document.getElementById('admin-q-text').value.trim();
+            const opt0 = document.getElementById('admin-opt-0').value.trim();
+            const opt1 = document.getElementById('admin-opt-1').value.trim();
+            const opt2 = document.getElementById('admin-opt-2').value.trim();
+            const opt3 = document.getElementById('admin-opt-3').value.trim();
+            const correct = document.getElementById('admin-correct').value;
 
-                if(userData.solvedDays && userData.solvedDays.includes(currentDay)) {
-                    alert("لقد قمت بحل هذا التحدي مسبقاً ولا يمكنك تكرار أخذ النقاط!");
-                    return;
-                }
-
-                if(chosenIdx === parseInt(ch.correct)) {
-                    userData.score = (userData.score || 0) + 100;
-                    if(!userData.solvedDays) userData.solvedDays = [];
-                    userData.solvedDays.push(currentDay);
-
-                    await setDoc(userRef, userData);
-                    
-                    await updateScoreHeader();
-                    await renderLeaderboard();
-                    showToast("إجابة صحيحة! تم إضافة 100 نقطة 🎉");
-                } else {
-                    alert("إجابة خاطئة، حاول مجدداً!");
-                }
-            } catch(e) {
-                alert("حدث خطأ أثناء الاتصال بقاعدة البيانات.");
+            if (!qText || !opt0 || !opt1) {
+                alert("برجاء كتابة السؤال واختيار الإجابات الأساسية على الأقل!");
+                return;
             }
-        };
 
-        async function renderLeaderboard() {
-            const container = document.getElementById('leaderboard-list');
-            try {
-                const q = query(collection(db, "users"), orderBy("score", "desc"), limit(10));
-                const querySnapshot = await getDocs(q);
-                container.innerHTML = '';
-                
-                let usersList = [];
-                querySnapshot.forEach((doc) => {
-                    usersList.push(doc.data());
-                });
-
-                if(usersList.length === 0) {
-                    container.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">لا يوجد مشاركون بعد.</p>`;
-                    return;
-                }
-
-                usersList.forEach((u, idx) => {
-                    container.innerHTML += `
-                        <div class="flex items-center justify-between py-2.5 text-xs">
-                            <div class="flex items-center gap-2.5">
-                                <span class="font-bold text-amber-400">#${idx+1}</span>
-                                <span class="font-semibold text-white">${u.name}</span>
-                            </div>
-                            <span class="text-indigo-400 font-bold bg-indigo-950/40 px-2.5 py-1 rounded border border-indigo-900/50">${u.score} نقطة</span>
-                        </div>
-                    `;
-                });
-            } catch(e) {
-                container.innerHTML = `<p class="text-xs text-red-400 text-center py-2">خطأ في تحميل لوحة الصدارة.</p>`;
-            }
-        }
-
-        async function updateScoreHeader() {
-            try {
-                const userRef = doc(db, "users", currentUser.email);
-                const userSnap = await getDoc(userRef);
-                if(userSnap.exists()) {
-                    document.getElementById('header-score').innerText = userSnap.data().score || 0;
-                }
-            } catch(e) {
-                console.log(e);
-            }
-        }
-
-        window.requestAdminAccess = function() {
-            const pass = prompt("أدخل كلمة مرور الأدمن:");
-            if(pass === ADMIN_SECRET) {
-                openAdminPanel();
-            } else if(pass !== null) {
-                alert("كلمة المرور غير صحيحة!");
-            }
-        };
-
-        function openAdminPanel() {
-            loadAdminDayData();
-            document.getElementById('admin-modal').classList.remove('hidden');
-            document.getElementById('admin-modal').classList.add('flex');
-        }
-
-        window.loadAdminDayData = function() {
-            const day = document.getElementById('admin-day-select').value;
-            const ch = challenges[day];
-            document.getElementById('admin-title').value = ch.title;
-            document.getElementById('admin-desc').value = ch.desc;
-            document.getElementById('admin-correct-idx').value = ch.correct !== undefined ? ch.correct : 0;
-            
-            for(let i=0; i<4; i++) {
-                document.getElementById(`admin-opt-${i}`).value = (ch.opts && ch.opts[i]) ? ch.opts[i] : "";
-            }
-        };
-
-        window.saveAdminChanges = function() {
-            const day = document.getElementById('admin-day-select').value;
-            challenges[day] = {
-                title: document.getElementById('admin-title').value,
-                desc: document.getElementById('admin-desc').value,
-                opts: [
-                    document.getElementById('admin-opt-0').value,
-                    document.getElementById('admin-opt-1').value,
-                    document.getElementById('admin-opt-2').value,
-                    document.getElementById('admin-opt-3').value
-                ],
-                correct: parseInt(document.getElementById('admin-correct-idx').value)
+            const qData = {
+                question: qText,
+                options: [opt0, opt1, opt2, opt3].filter(o => o !== ""),
+                correct: Number(correct)
             };
-            localStorage.setItem('challenges_data_v7', JSON.stringify(challenges));
-            closeModal('admin-modal');
-            renderChallengeCard();
-            showToast("تم تحديث التحدي بنجاح!");
-        };
 
-        window.closeModal = function(id) {
-            document.getElementById(id).classList.remove('flex');
-            document.getElementById(id).classList.add('hidden');
-        };
-
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            document.getElementById('toast-text').innerText = msg;
-            t.classList.remove('hidden');
-            setTimeout(() => { t.classList.add('hidden'); }, 3500);
+            const qDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'current_question');
+            await setDoc(qDocRef, qData);
+            alert("تم حفظ ونشر السؤال بنجاح لكل المشاركين!");
         }
 
-        initApp();
+        async function loadLeaderboard() {
+            const lbList = document.getElementById('leaderboard-list');
+            lbList.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-slate-400">جاري تحميل لوحة الشرف...</td></tr>`;
+
+            try {
+                const q = query(collection(db, 'artifacts', appId, 'public', 'data'));
+                const querySnapshot = await getDocs(q);
+                let scores = [];
+                querySnapshot.forEach((docSnap) => {
+                    if (docSnap.id.startsWith('scores_')) {
+                        scores.push(docSnap.data());
+                    }
+                });
+
+                // Sort by score descending
+                scores.sort((a, b) => b.score - a.score);
+
+                lbList.innerHTML = '';
+                if (scores.length === 0) {
+                    lbList.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-slate-400">لا يوجد متصدرين حتى الآن. ابدأ بالحل!</td></tr>`;
+                    return;
+                }
+
+                scores.slice(0, 10).forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.className = "border-b border-slate-700/50 hover:bg-slate-700/20";
+                    row.innerHTML = `
+                        <td class="p-3 font-bold text-amber-400">${index + 1}</td>
+                        <td class="p-3">${item.name}</td>
+                        <td class="p-3 font-semibold text-emerald-400">${item.score} نقطة</td>
+                    `;
+                    lbList.lbList ? '' : lbList.appendChild(row);
+                });
+            } catch (err) {
+                console.error("Error loading leaderboard:", err);
+                lbList.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-rose-400">حدث خطأ في تحميل لوحة الشرف</td></tr>`;
+            }
+        }
     </script>
 </body>
 </html>
+```
